@@ -7,51 +7,34 @@ import {
   Param,
   Body,
 } from '@nestjs/common';
+import { ProductosService } from 'src/services/productos.service';
 
 @Controller('productos')
 export class ProductosController {
+  constructor(private productosService: ProductosService) {}
+
   @Get()
   getAllProducts(): any {
-    return {
-      message: 'All products obtained',
-      products: [
-        { id: 1, nombre: 'Producto 1', precio: 100 },
-        { id: 2, nombre: 'Producto 2', precio: 200 },
-      ],
-    };
+    return this.productosService.findAll();
   }
 
   @Get('/:idProduct')
   getProductById(@Param('idProduct') idProduct: string): any {
-    return {
-      message: 'Product obtained by ID',
-      product: { id: idProduct, nombre: 'Producto ' + idProduct, precio: 150 },
-    };
+    return this.productosService.findOne(+idProduct);
   }
 
   @Post()
   createProducto(@Body() payload: any): any {
-    return {
-      message: 'Product created succesfully',
-      producto: payload,
-    };
+    return this.productosService.createProduct(payload);
   }
 
   @Put('/:idProduct')
   updateProduct(@Param('idProduct') idProduct: string, @Body() body: any): any {
-    return {
-      idProduct: idProduct,
-      nombre: body.nombre,
-      precio: body.precio,
-    };
+    return this.productosService.updateProducto(+idProduct, body);
   }
 
   @Delete('/:idProduct')
   deleteProduct(@Param('idProduct') idProduct: string): any {
-    return {
-      idProduct: idProduct,
-      delete: true,
-      count: 1,
-    };
+    return this.productosService.deleteProducto(+idProduct);
   }
 }
