@@ -6,6 +6,7 @@ import {
   Delete,
   Param,
   Body,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { ProductosService } from 'src/services/productos.service';
 
@@ -19,7 +20,7 @@ export class ProductosController {
   }
 
   @Get('/:idProduct')
-  getProductById(@Param('idProduct') idProduct: string): any {
+  getProductById(@Param('idProduct', ParseIntPipe) idProduct: string): any {
     return this.productosService.findOne(+idProduct);
   }
 
@@ -29,12 +30,15 @@ export class ProductosController {
   }
 
   @Put('/:idProduct')
-  updateProduct(@Param('idProduct') idProduct: string, @Body() body: any): any {
+  updateProduct(
+    @Param('idProduct', ParseIntPipe) idProduct: string,
+    @Body() body: any,
+  ): any {
     return this.productosService.updateProducto(+idProduct, body);
   }
 
   @Delete('/:idProduct')
-  deleteProduct(@Param('idProduct') idProduct: string): any {
+  deleteProduct(@Param('idProduct', ParseIntPipe) idProduct: string): any {
     return this.productosService.deleteProducto(+idProduct);
   }
 }
