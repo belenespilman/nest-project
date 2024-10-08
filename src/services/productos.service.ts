@@ -1,31 +1,79 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { Producto } from 'src/entities/producto.entity';
 
 @Injectable()
 export class ProductosService {
-  private productos = [
-    { id: 1, nombre: 'Producto 1', precio: 100 },
-    { id: 2, nombre: 'Producto 2', precio: 200 },
+  private idCont = 1;
+  private productos: Producto[] = [
+    {
+      id: 1,
+      nombre: 'Producto 1',
+      descripcion: 'loremipsum',
+      precio: 25.99,
+      stock: 50,
+      origen: 'España',
+      imagen: '',
+    },
+    {
+      id: 2,
+      nombre: 'Producto 2',
+      descripcion: '',
+      precio: 75.5,
+      stock: 30,
+      origen: 'Alemania',
+      imagen: '',
+    },
+    {
+      id: 3,
+      nombre: 'Producto 3',
+      descripcion: '',
+      precio: 120.0,
+      stock: 15,
+      origen: 'Estados Unidos',
+      imagen: '',
+    },
+    {
+      id: 4,
+      nombre: 'Producto 4',
+      descripcion: '',
+      precio: 40.75,
+      stock: 70,
+      origen: 'Italia',
+      imagen: '',
+    },
   ];
 
   findAll() {
-    return this.productos;
+    const productos = this.productos;
+    if (!productos) {
+      throw new NotFoundException('No hay productos disponibles');
+    }
+    return productos;
   }
 
   findOne(id: number) {
-    return this.productos.find((product) => product.id === id);
-  }
-
-  createProduct(producto: any) {
-    this.productos.push(producto);
+    const producto = this.productos.find((product) => product.id === id);
+    if (!producto) {
+      throw new NotFoundException(`El producto con id: ${id} no existe`);
+    }
     return producto;
   }
 
-  updateProducto(id: number, productoActualizado: any) {
+  createProduct(payload: any) {
+    this.idCont = this.idCont + 1;
+    const newProduct = {
+      id: this.idCont,
+      ...payload,
+    };
+    return this.productos.push(newProduct);
+  }
+
+  updateProducto(id: number, payload: any) {
     const index = this.productos.findIndex((product) => product.id === id);
     if (index > -1) {
       this.productos[index] = {
         ...this.productos[index],
-        ...productoActualizado,
+        ...payload,
       };
       return this.productos[index];
     }
