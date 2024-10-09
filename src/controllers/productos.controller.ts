@@ -6,8 +6,11 @@ import {
   Delete,
   Param,
   Body,
-  ParseIntPipe,
+  Query,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
+import { ParseIntPipe } from 'src/common/parse-int.pipe';
 import { ProductosService } from 'src/services/productos.service';
 
 @Controller('productos')
@@ -15,13 +18,15 @@ export class ProductosController {
   constructor(private productosService: ProductosService) {}
 
   @Get()
+  @HttpCode(HttpStatus.ACCEPTED)
   getAllProducts(): any {
     return this.productosService.findAll();
   }
 
   @Get('/:idProduct')
-  getProductById(@Param('idProduct', ParseIntPipe) idProduct: string): any {
-    return this.productosService.findOne(+idProduct);
+  @HttpCode(HttpStatus.ACCEPTED)
+  getProductById(@Param('idProduct', ParseIntPipe) idProduct: number): any {
+    return this.productosService.findOne(idProduct);
   }
 
   @Post()

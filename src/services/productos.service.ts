@@ -70,22 +70,22 @@ export class ProductosService {
 
   updateProducto(id: number, payload: any) {
     const index = this.productos.findIndex((product) => product.id === id);
-    if (index > -1) {
-      this.productos[index] = {
-        ...this.productos[index],
-        ...payload,
-      };
-      return this.productos[index];
+    if (index === -1) {
+      throw new NotFoundException(`El producto con id: ${id} no se encuentra`);
     }
-    return null;
+    this.productos[index] = {
+      ...this.productos[index],
+      ...payload,
+    };
+    return this.productos[index];
   }
 
   deleteProducto(id: number) {
     const index = this.productos.findIndex((product) => product.id === id);
-    if (index > -1) {
-      this.productos.splice(index, 1);
-      return { delete: true, count: 1 };
+    if (index === -1) {
+      throw new NotFoundException(`El producto con id: ${id} no se encuentra`);
     }
-    return { delete: false, count: 0 };
+    this.productos.splice(index, 1);
+    return true;
   }
 }
