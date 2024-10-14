@@ -34,7 +34,7 @@ export class ProductosController {
   }
 
   @Post()
-  createProducto(@Body() payload: CreateProductDto): any {
+  createProducto(@Body() payload: any): any {
     return this.productosService.createProduct(payload);
   }
 

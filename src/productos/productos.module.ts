@@ -13,5 +13,6 @@ import { FabricantesService } from './services/fabricantes.service';
     CategoriasController,
   ],
   providers: [ProductosService, CategoriasService, FabricantesService],
+  exports: [ProductosService],
 })
 export class ProductosModule {}

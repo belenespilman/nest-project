@@ -59,7 +59,7 @@ export class ProductosService {
     return producto;
   }
 
-  createProduct(payload: any) {
+  createProduct(payload: Producto) {
     this.idCont = this.idCont + 1;
     const newProduct = {
       id: this.idCont,
@@ -68,7 +68,7 @@ export class ProductosService {
     return this.productos.push(newProduct);
   }
 
-  updateProducto(id: number, payload: any) {
+  updateProducto(id: number, payload: Partial<Producto>) {
     const index = this.productos.findIndex((product) => product.id === id);
     if (index === -1) {
       throw new NotFoundException(`El producto con id: ${id} no se encuentra`);
