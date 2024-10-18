@@ -2,6 +2,7 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { ProductosService } from 'src/productos/services/productos.service';
 import { Pedido } from '../entities/pedido.entity';
 import { Operador } from '../entities/operador.entity';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class OperadoresService {
@@ -29,10 +30,14 @@ export class OperadoresService {
 
   constructor(
     private productsService: ProductosService,
-    @Inject('APIKEY') private apiKey: string,
+    private configService: ConfigService,
   ) {}
 
   findAll() {
+    const apiKey = this.configService.get('APIKEY');
+    const dbName = this.configService.get('DATABASE_NAME');
+    const dbPort = this.configService.get('DATABASE_PORT');
+    console.log(apiKey, dbName);
     const operadores = this.operadores;
     if (!operadores) {
       throw new NotFoundException('No se encuentran operadores');
@@ -74,7 +79,7 @@ export class OperadoresService {
     return {
       date: new Date(),
       operador,
-      products: this.productsService.findAll(),
+      productos: this.productsService.findAll(),
     };
   }
 
