@@ -28,16 +28,9 @@ export class OperadoresService {
     },
   ];
 
-  constructor(
-    private productsService: ProductosService,
-    private configService: ConfigService,
-  ) {}
+  constructor(private productsService: ProductosService) {}
 
   findAll() {
-    const apiKey = this.configService.get('APIKEY');
-    const dbName = this.configService.get('DATABASE_NAME');
-    const dbPort = this.configService.get('DATABASE_PORT');
-    console.log(apiKey, dbName);
     const operadores = this.operadores;
     if (!operadores) {
       throw new NotFoundException('No se encuentran operadores');
@@ -77,6 +70,7 @@ export class OperadoresService {
   getOrderByUser(id: number): Pedido {
     const operador = this.findOne(id);
     return {
+      id: id,
       date: new Date(),
       operador,
       productos: this.productsService.findAll(),
