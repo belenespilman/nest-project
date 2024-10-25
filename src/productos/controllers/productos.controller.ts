@@ -39,7 +39,7 @@ export class ProductosController {
 
   @Post()
   @ApiOperation({ summary: 'Crear un producto' })
-  createProducto(@Body() payload: any): any {
+  createProducto(@Body() payload: CreateProductDto): any {
     return this.productosService.createProduct(payload);
   }
 
