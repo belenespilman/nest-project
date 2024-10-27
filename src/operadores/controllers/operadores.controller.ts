@@ -13,6 +13,7 @@ import {
 import { OperadoresService } from '../services/operadores.service';
 import { ParseIntPipe } from 'src/common/parse-int.pipe';
 import { Operador } from '../entities/operador.entity';
+import { CreateOperadorDTO, UpdateOperadorDTO } from '../dtos/operadores.dto';
 
 @ApiTags('Operadores')
 @Controller('operadores')
@@ -39,9 +40,14 @@ export class OperadoresController {
     return this.operadoresService.getOrderByUser(id);
   }
 
+  @Get('tasks')
+  getTasks() {
+    return this.operadoresService.getTasks();
+  }
+
   @Post()
   @ApiOperation({ summary: 'Crear operador' })
-  createOperador(@Body() payload: Operador): any {
+  createOperador(@Body() payload: CreateOperadorDTO): any {
     return this.operadoresService.createOperador(payload);
   }
 
@@ -49,7 +55,7 @@ export class OperadoresController {
   @ApiOperation({ summary: 'Actualizar operador' })
   updateOperator(
     @Param('idOperador', ParseIntPipe) idOperador: number,
-    @Body() body: any,
+    @Body() body: UpdateOperadorDTO,
   ): any {
     return this.operadoresService.updateOperador(+idOperador, body);
   }

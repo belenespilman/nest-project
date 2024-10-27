@@ -9,6 +9,10 @@ import {
 } from 'class-validator';
 
 export class CreateProductDto {
+  @IsNumber()
+  @IsNotEmpty()
+  readonly id: number;
+
   @ApiProperty({ description: 'Nombre del producto' })
   @IsString()
   @IsNotEmpty()

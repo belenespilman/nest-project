@@ -3,6 +3,7 @@ import { ProductosService } from 'src/productos/services/productos.service';
 import { Pedido } from '../entities/pedido.entity';
 import { Operador } from '../entities/operador.entity';
 import { ConfigService } from '@nestjs/config';
+import { Client } from 'pg';
 
 @Injectable()
 export class OperadoresService {
@@ -28,7 +29,10 @@ export class OperadoresService {
     },
   ];
 
-  constructor(private productsService: ProductosService) {}
+  constructor(
+    @Inject('PG') private clientPg: Client,
+    private productsService: ProductosService,
+  ) {}
 
   findAll() {
     const operadores = this.operadores;
@@ -75,6 +79,17 @@ export class OperadoresService {
       operador,
       productos: this.productsService.findAll(),
     };
+  }
+
+  getTasks() {
+    return new Promise((resolve, reject) => {
+      this.clientPg.query('SELECT * FROM tareas', (err, res) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(res.rows);
+      });
+    });
   }
 
   deleteOperador(id: number) {
