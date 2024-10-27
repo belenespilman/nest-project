@@ -59,6 +59,10 @@ export class ProductosService {
     return producto;
   }
 
+  getProductsByIds(ids: number[]): Producto[] {
+    return this.productos.filter((producto) => ids.includes(producto.id));
+  }
+
   createProduct(payload: Producto) {
     this.idCont = this.idCont + 1;
     const newProduct = {

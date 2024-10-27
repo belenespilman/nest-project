@@ -2,6 +2,8 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { ProductosService } from 'src/productos/services/productos.service';
 import { Pedido } from '../entities/pedido.entity';
 import { Operador } from '../entities/operador.entity';
+import { ConfigService } from '@nestjs/config';
+import { Client } from 'pg';
 
 @Injectable()
 export class OperadoresService {
@@ -28,8 +30,8 @@ export class OperadoresService {
   ];
 
   constructor(
+    @Inject('PG') private clientPg: Client,
     private productsService: ProductosService,
-    @Inject('APIKEY') private apiKey: string,
   ) {}
 
   findAll() {
@@ -72,10 +74,22 @@ export class OperadoresService {
   getOrderByUser(id: number): Pedido {
     const operador = this.findOne(id);
     return {
+      id: id,
       date: new Date(),
       operador,
-      products: this.productsService.findAll(),
+      productos: this.productsService.findAll(),
     };
+  }
+
+  getTasks() {
+    return new Promise((resolve, reject) => {
+      this.clientPg.query('SELECT * FROM tareas', (err, res) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(res.rows);
+      });
+    });
   }
 
   deleteOperador(id: number) {
