@@ -1,53 +1,56 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { OperadoresService } from './operadores.service';
-import { ProductosService } from 'src/productos/services/productos.service';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { Pedido } from '../entities/pedido.entity';
+import { CreatePedidoDTO, UpdatePedidoDTO } from '../dtos/pedidos.dto';
 
 @Injectable()
 export class PedidosService {
-  private pedidos: Pedido[] = [];
-
   constructor(
-    private readonly operadoresService: OperadoresService,
-    private readonly productoService: ProductosService,
+    @InjectRepository(Pedido)
+    private readonly pedidoRepo: Repository<Pedido>,
   ) {}
 
-  findAll() {
-    const pedidos = this.pedidos;
-    if (!pedidos) {
-      throw new NotFoundException('No se encuentran pedidos');
+  async findAll(): Promise<Pedido[]> {
+    const pedidos = await this.pedidoRepo.find({
+      relations: ['operador', 'productos'],
+    });
+    if (!pedidos.length) {
+      throw new NotFoundException('No hay pedidos disponibles');
     }
     return pedidos;
   }
 
-  findOne(id: number) {
-    const pedido = this.pedidos.find((id) => pedido.id === id);
+  async findOne(id: number): Promise<Pedido> {
+    const pedido = await this.pedidoRepo.findOne({
+      where: { id },
+      relations: ['operador', 'productos'],
+    });
     if (!pedido) {
-      throw new NotFoundException('Pedido no encontrado');
+      throw new NotFoundException(`El pedido con id: ${id} no existe`);
     }
     return pedido;
   }
 
-  createPedido(operadorId: number, productoIds: number[]): Pedido {
-    const operador = this.operadoresService.findOne(operadorId);
-    const productos = this.productoService.getProductsByIds(productoIds);
-
-    if (!Array.isArray(productos) || productos.length === 0) {
-      throw new Error('No products found for the provided IDs');
-    }
-
-    const nuevoPedido: Pedido = {
-      id: this.pedidos.length + 1,
-      date: new Date(),
-      operador: operador,
-      productos: productos,
-    };
-
-    this.pedidos.push(nuevoPedido);
-    return nuevoPedido;
+  async createPedido(payload: CreatePedidoDTO): Promise<Pedido> {
+    const newPedido = this.pedidoRepo.create(payload);
+    return await this.pedidoRepo.save(newPedido);
   }
 
-  updatePedido() {}
+  async updatePedido(id: number, payload: UpdatePedidoDTO): Promise<Pedido> {
+    const pedido = await this.pedidoRepo.findOneBy({ id });
+    if (!pedido) {
+      throw new NotFoundException(`El pedido con id: ${id} no se encuentra`);
+    }
+    Object.assign(pedido, payload);
+    return await this.pedidoRepo.save(pedido);
+  }
 
-  deletePedido() {}
+  async deletePedido(id: number): Promise<void> {
+    const pedido = await this.pedidoRepo.findOneBy({ id });
+    if (!pedido) {
+      throw new NotFoundException(`El pedido con id: ${id} no se encuentra`);
+    }
+    await this.pedidoRepo.remove(pedido);
+  }
 }

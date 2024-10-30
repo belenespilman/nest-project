@@ -18,6 +18,6 @@ import { Fabricante } from './entities/fabricante.entity';
     CategoriasController,
   ],
   providers: [ProductosService, CategoriasService, FabricantesService],
-  exports: [ProductosService],
+  exports: [ProductosService, TypeOrmModule],
 })
 export class ProductosModule {}

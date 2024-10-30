@@ -1,95 +1,60 @@
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, In } from 'typeorm';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Producto } from 'src/productos/entities/producto.entity';
 
 @Injectable()
 export class ProductosService {
-  private idCont = 1;
-  private productos: Producto[] = [
-    {
-      id: 1,
-      nombre: 'Producto 1',
-      descripcion: 'loremipsum',
-      precio: 25.99,
-      stock: 50,
-      origen: 'España',
-      imagen: '',
-    },
-    {
-      id: 2,
-      nombre: 'Producto 2',
-      descripcion: '',
-      precio: 75.5,
-      stock: 30,
-      origen: 'Alemania',
-      imagen: '',
-    },
-    {
-      id: 3,
-      nombre: 'Producto 3',
-      descripcion: '',
-      precio: 120.0,
-      stock: 15,
-      origen: 'Estados Unidos',
-      imagen: '',
-    },
-    {
-      id: 4,
-      nombre: 'Producto 4',
-      descripcion: '',
-      precio: 40.75,
-      stock: 70,
-      origen: 'Italia',
-      imagen: '',
-    },
-  ];
+  constructor(
+    @InjectRepository(Producto) private productRepo: Repository<Producto>,
+  ) {}
 
-  findAll() {
-    const productos = this.productos;
-    if (!productos) {
+  async findAll(): Promise<Producto[]> {
+    const productos = await this.productRepo.find();
+    if (!productos.length) {
       throw new NotFoundException('No hay productos disponibles');
     }
     return productos;
   }
 
-  findOne(id: number) {
-    const producto = this.productos.find((product) => product.id === id);
+  async findOne(id: number): Promise<Producto> {
+    const producto = await this.productRepo.findOneBy({ id });
     if (!producto) {
       throw new NotFoundException(`El producto con id: ${id} no existe`);
     }
     return producto;
   }
 
-  getProductsByIds(ids: number[]): Producto[] {
-    return this.productos.filter((producto) => ids.includes(producto.id));
+  async getProductsByIds(ids: number[]): Promise<Producto[]> {
+    return await this.productRepo.find({
+      where: {
+        id: In(ids),
+      },
+    });
   }
 
-  createProduct(payload: Producto) {
-    this.idCont = this.idCont + 1;
-    const newProduct = {
-      id: this.idCont,
-      ...payload,
-    };
-    return this.productos.push(newProduct);
+  async createProduct(payload: Producto): Promise<Producto> {
+    const newProduct = this.productRepo.create(payload);
+    return await this.productRepo.save(newProduct);
   }
 
-  updateProducto(id: number, payload: Partial<Producto>) {
-    const index = this.productos.findIndex((product) => product.id === id);
-    if (index === -1) {
+  async updateProduct(
+    id: number,
+    payload: Partial<Producto>,
+  ): Promise<Producto> {
+    const producto = await this.productRepo.findOneBy({ id });
+    if (!producto) {
       throw new NotFoundException(`El producto con id: ${id} no se encuentra`);
     }
-    this.productos[index] = {
-      ...this.productos[index],
-      ...payload,
-    };
-    return this.productos[index];
+    Object.assign(producto, payload);
+    return await this.productRepo.save(producto);
   }
 
-  deleteProducto(id: number) {
-    const index = this.productos.findIndex((product) => product.id === id);
-    if (index === -1) {
+  async deleteProducto(id: number): Promise<void> {
+    const producto = await this.productRepo.findOneBy({ id });
+    if (!producto) {
       throw new NotFoundException(`El producto con id: ${id} no se encuentra`);
     }
-    this.productos.splice(index, 1);
-    return true;
+    await this.productRepo.remove(producto);
   }
 }
