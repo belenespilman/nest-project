@@ -44,7 +44,8 @@ lerna-debug.log*
 *.env.test.local
 *.env.production.local
 *.env.local
-*postgres_data
+postgres_data
+pgadmin_data
 
 # temp directory
 .temp
