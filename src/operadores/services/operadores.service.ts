@@ -1,103 +1,54 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { ProductosService } from 'src/productos/services/productos.service';
-import { Pedido } from '../entities/pedido.entity';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { Operador } from '../entities/operador.entity';
-import { ConfigService } from '@nestjs/config';
-import { Client } from 'pg';
+import { CreateOperadorDTO, UpdateOperadorDTO } from '../dtos/operadores.dto';
 
 @Injectable()
 export class OperadoresService {
-  private idCont = 1;
-  private operadores: Operador[] = [
-    {
-      id: 1,
-      email: 'operador1@example.com',
-      password: 'password123',
-      role: 'admin',
-    },
-    {
-      id: 2,
-      email: 'operador2@example.com',
-      password: 'password456',
-      role: 'user',
-    },
-    {
-      id: 3,
-      email: 'operador3@example.com',
-      password: 'password789',
-      role: 'user',
-    },
-  ];
-
   constructor(
-    @Inject('PG') private clientPg: Client,
-    private productsService: ProductosService,
+    @InjectRepository(Operador)
+    private readonly operadorRepo: Repository<Operador>,
   ) {}
 
-  findAll() {
-    const operadores = this.operadores;
-    if (!operadores) {
-      throw new NotFoundException('No se encuentran operadores');
+  async findAll(): Promise<Operador[]> {
+    const operadores = await this.operadorRepo.find();
+    if (!operadores.length) {
+      throw new NotFoundException('No hay operadores disponibles');
     }
     return operadores;
   }
 
-  findOne(id: number): Operador {
-    const operador = this.operadores.find((op) => op.id === id);
+  async findOne(id: number): Promise<Operador> {
+    const operador = await this.operadorRepo.findOne({ where: { id } });
     if (!operador) {
-      throw new NotFoundException(`Operador con ID ${id} no encontrado`);
+      throw new NotFoundException(`El operador con id: ${id} no existe`);
     }
     return operador;
   }
 
-  createOperador(payload: Operador) {
-    this.idCont = this.idCont + 1;
-    const newOperador = {
-      id: this.idCont,
-      ...payload,
-    };
-    return this.operadores.push(newOperador);
+  async createOperador(payload: CreateOperadorDTO): Promise<Operador> {
+    const newOperador = this.operadorRepo.create(payload);
+    return await this.operadorRepo.save(newOperador);
   }
 
-  updateOperador(id: number, payload: Partial<Operador>) {
-    const index = this.operadores.findIndex((op) => op.id === id);
-    if (index === -1) {
+  async updateOperador(
+    id: number,
+    payload: UpdateOperadorDTO,
+  ): Promise<Operador> {
+    const operador = await this.operadorRepo.findOne({ where: { id } });
+    if (!operador) {
       throw new NotFoundException(`El operador con id: ${id} no se encuentra`);
     }
-    this.operadores[index] = {
-      ...this.operadores[index],
-      ...payload,
-    };
-    return this.operadores[index];
+    Object.assign(operador, payload);
+    return await this.operadorRepo.save(operador);
   }
 
-  getOrderByUser(id: number): Pedido {
-    const operador = this.findOne(id);
-    return {
-      id: id,
-      date: new Date(),
-      operador,
-      productos: this.productsService.findAll(),
-    };
-  }
-
-  getTasks() {
-    return new Promise((resolve, reject) => {
-      this.clientPg.query('SELECT * FROM tareas', (err, res) => {
-        if (err) {
-          reject(err);
-        }
-        resolve(res.rows);
-      });
-    });
-  }
-
-  deleteOperador(id: number) {
-    const index = this.operadores.findIndex((op) => op.id === id);
-    if (index === -1) {
-      throw new NotFoundException(`El producto con id: ${id} no se encuentra`);
+  async removeOperador(id: number): Promise<void> {
+    const operador = await this.operadorRepo.findOne({ where: { id } });
+    if (!operador) {
+      throw new NotFoundException(`El operador con id: ${id} no se encuentra`);
     }
-    this.operadores.splice(index, 1);
-    return true;
+    await this.operadorRepo.remove(operador); // Elimina el operador de la base de datos
   }
 }
