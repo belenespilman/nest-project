@@ -27,23 +27,23 @@ export class OperadoresController {
     return this.operadoresService.findAll();
   }
 
-  @Get()
+  @Get('/:idOperator')
   @ApiOperation({ summary: 'Obtener operador por ID' })
   @HttpCode(HttpStatus.ACCEPTED)
   getOperatorById(@Param('idOperator', ParseIntPipe) idOperator: number): any {
     return this.operadoresService.findOne(+idOperator);
   }
 
-  @Get(':id/pedidos')
-  @ApiOperation({ summary: 'Obtener pedido por usuario' })
-  getOrders(@Param('id', ParseIntPipe) id: number) {
-    return this.operadoresService.getOrderByUser(id);
-  }
+  // @Get(':id/pedidos')
+  // @ApiOperation({ summary: 'Obtener pedido por usuario' })
+  // getOrders(@Param('id', ParseIntPipe) id: number) {
+  //   return this.operadoresService.getOrderByUser(id);
+  // }
 
-  @Get('tasks')
-  getTasks() {
-    return this.operadoresService.getTasks();
-  }
+  // @Get('tasks')
+  // getTasks() {
+  //   return this.operadoresService.getTasks();
+  // }
 
   @Post()
   @ApiOperation({ summary: 'Crear operador' })
@@ -51,7 +51,7 @@ export class OperadoresController {
     return this.operadoresService.createOperador(payload);
   }
 
-  @Put()
+  @Put('/:idOperator')
   @ApiOperation({ summary: 'Actualizar operador' })
   updateOperator(
     @Param('idOperador', ParseIntPipe) idOperador: number,
@@ -60,7 +60,7 @@ export class OperadoresController {
     return this.operadoresService.updateOperador(+idOperador, body);
   }
 
-  @Delete()
+  @Delete('/:idOperator')
   @ApiOperation({ summary: 'Delete operator by ID' })
   deleteOperator(@Param('idOperator', ParseIntPipe) idOperator: string): any {
     return this.operadoresService.deleteOperador(+idOperator);

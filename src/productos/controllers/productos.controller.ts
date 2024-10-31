@@ -49,7 +49,7 @@ export class ProductosController {
     @Param('idProduct', ParseIntPipe) idProduct: string,
     @Body() body: UpdateProductDto,
   ): any {
-    return this.productosService.updateProducto(+idProduct, body);
+    return this.productosService.updateProduct(+idProduct, body);
   }
 
   @Delete('/:idProduct')

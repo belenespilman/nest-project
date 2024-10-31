@@ -44,7 +44,7 @@ export class OperadoresService {
     return await this.operadorRepo.save(operador);
   }
 
-  async removeOperador(id: number): Promise<void> {
+  async deleteOperador(id: number): Promise<void> {
     const operador = await this.operadorRepo.findOne({ where: { id } });
     if (!operador) {
       throw new NotFoundException(`El operador con id: ${id} no se encuentra`);

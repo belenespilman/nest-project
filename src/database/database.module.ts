@@ -23,6 +23,6 @@ import config from '../config';
       },
     }),
   ],
-  exports: ['APIKEY', 'PG', TypeOrmModule],
+  exports: [TypeOrmModule],
 })
 export class DatabaseModule {}
