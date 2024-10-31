@@ -20,7 +20,7 @@ export class CategoriasService {
   }
 
   async findOne(id: number): Promise<Categoria> {
-    const categoria = await this.categoriaRepo.findOneBy({ id });
+    const categoria = await this.categoriaRepo.findOne({ id });
     if (!categoria) {
       throw new NotFoundException(`La categoría con id: ${id} no existe`);
     }
@@ -36,7 +36,7 @@ export class CategoriasService {
     id: number,
     payload: UpdateCategoryDTO,
   ): Promise<Categoria> {
-    const categoria = await this.categoriaRepo.findOneBy({ id });
+    const categoria = await this.categoriaRepo.findOne({ id });
     if (!categoria) {
       throw new NotFoundException(`La categoría con id: ${id} no se encuentra`);
     }
@@ -45,7 +45,7 @@ export class CategoriasService {
   }
 
   async deleteCategoria(id: number): Promise<void> {
-    const categoria = await this.categoriaRepo.findOneBy({ id });
+    const categoria = await this.categoriaRepo.findOne({ id });
     if (!categoria) {
       throw new NotFoundException(`La categoría con id: ${id} no se encuentra`);
     }

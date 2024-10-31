@@ -2,6 +2,12 @@ import { Global, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigType } from '@nestjs/config';
 import config from '../config';
+import { Producto } from 'src/productos/entities/producto.entity';
+import { Categoria } from 'src/productos/entities/categoria.entity';
+import { Comprador } from 'src/operadores/entities/comprador.entity';
+import { Pedido } from 'src/operadores/entities/pedido.entity';
+import { Fabricante } from 'src/productos/entities/fabricante.entity';
+import { Operador } from 'src/operadores/entities/operador.entity';
 
 @Global()
 @Module({
@@ -17,7 +23,15 @@ import config from '../config';
           username: user,
           password,
           database: dbName,
-          synchronize: true,
+          entities: [
+            Producto,
+            Categoria,
+            Comprador,
+            Pedido,
+            Fabricante,
+            Operador,
+          ],
+          synchronize: false,
           autoLoadEntities: true,
         };
       },

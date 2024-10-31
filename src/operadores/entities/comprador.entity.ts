@@ -5,7 +5,7 @@ export class Comprador {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar', length: 255, unique: true })
+  @Column({ type: 'varchar', length: 255, unique: false })
   nombre: string;
 
   @Column({ type: 'varchar' })

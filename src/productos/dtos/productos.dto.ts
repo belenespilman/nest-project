@@ -6,6 +6,7 @@ import {
   IsUrl,
   Min,
   IsNotEmpty,
+  IsDate,
 } from 'class-validator';
 
 export class CreateProductDto {
@@ -41,7 +42,6 @@ export class CreateProductDto {
   readonly origen: string;
 
   @ApiProperty({ description: 'Imagen del producto' })
-  @IsUrl()
   @IsNotEmpty()
   readonly imagen: string;
 }

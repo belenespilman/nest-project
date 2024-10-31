@@ -23,7 +23,7 @@ export class FabricantesService {
   }
 
   async findOne(id: number): Promise<Fabricante> {
-    const fabricante = await this.fabricanteRepo.findOneBy({ id });
+    const fabricante = await this.fabricanteRepo.findOne({ id });
     if (!fabricante) {
       throw new NotFoundException(`El fabricante con id: ${id} no existe`);
     }
@@ -39,7 +39,7 @@ export class FabricantesService {
     id: number,
     payload: UpdateFabricanteDTO,
   ): Promise<Fabricante> {
-    const fabricante = await this.fabricanteRepo.findOneBy({ id });
+    const fabricante = await this.fabricanteRepo.findOne({ id });
     if (!fabricante) {
       throw new NotFoundException(
         `El fabricante con id: ${id} no se encuentra`,
@@ -50,7 +50,7 @@ export class FabricantesService {
   }
 
   async deleteFabricante(id: number): Promise<void> {
-    const fabricante = await this.fabricanteRepo.findOneBy({ id });
+    const fabricante = await this.fabricanteRepo.findOne({ id });
     if (!fabricante) {
       throw new NotFoundException(
         `El fabricante con id: ${id} no se encuentra`,
