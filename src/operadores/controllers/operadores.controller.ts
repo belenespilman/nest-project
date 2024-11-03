@@ -11,7 +11,7 @@ import {
   Delete,
 } from '@nestjs/common';
 import { OperadoresService } from '../services/operadores.service';
-import { ParseIntPipe } from 'src/common/parse-int.pipe';
+import { ParseIntPipe } from '/common/parse-int.pipe';
 import { Operador } from '../entities/operador.entity';
 import { CreateOperadorDTO, UpdateOperadorDTO } from '../dtos/operadores.dto';
 

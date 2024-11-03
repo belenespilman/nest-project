@@ -3,16 +3,23 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Operador } from '../entities/operador.entity';
 import { CreateOperadorDTO, UpdateOperadorDTO } from '../dtos/operadores.dto';
+import { ProductosService } from 'productos/services/productos.service';
+import { Pedido } from '../entities/pedido.entity';
+import { CompradoresService } from './compradores.service';
 
 @Injectable()
 export class OperadoresService {
   constructor(
     @InjectRepository(Operador)
     private readonly operadorRepo: Repository<Operador>,
+    private productosService: ProductosService,
+    private compradoresService: CompradoresService,
   ) {}
 
   async findAll(): Promise<Operador[]> {
-    const operadores = await this.operadorRepo.find();
+    const operadores = await this.operadorRepo.find({
+      relations: ['comprador'],
+    });
     if (!operadores.length) {
       throw new NotFoundException('No hay operadores disponibles');
     }
@@ -20,7 +27,10 @@ export class OperadoresService {
   }
 
   async findOne(id: number): Promise<Operador> {
-    const operador = await this.operadorRepo.findOne({ where: { id } });
+    const operador = await this.operadorRepo.findOne({
+      where: { id },
+      relations: ['comprador'],
+    });
     if (!operador) {
       throw new NotFoundException(`El operador con id: ${id} no existe`);
     }
@@ -29,7 +39,13 @@ export class OperadoresService {
 
   async createOperador(payload: CreateOperadorDTO): Promise<Operador> {
     const newOperador = this.operadorRepo.create(payload);
-    return await this.operadorRepo.save(newOperador);
+    if (payload.compradorId) {
+      const comprador = await this.compradoresService.findOne(
+        payload.compradorId,
+      );
+      newOperador.comprador = comprador;
+    }
+    return this.operadorRepo.save(newOperador);
   }
 
   async updateOperador(
@@ -49,6 +65,20 @@ export class OperadoresService {
     if (!operador) {
       throw new NotFoundException(`El operador con id: ${id} no se encuentra`);
     }
-    await this.operadorRepo.remove(operador); // Elimina el operador de la base de datos
+    await this.operadorRepo.remove(operador);
   }
+
+  // async getOrderByUser(id: number): Promise<Pedido> {
+  //   const operador = await this.operadorRepo.findOne({
+  //     where: {
+  //       id,
+  //     },
+  //   });
+  //   return {
+  //     id,
+  //     date: new Date(),
+  //     operador,
+  //     productos: await this.productosService.findAll(),
+  //   };
+  // }
 }

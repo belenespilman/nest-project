@@ -1,5 +1,11 @@
 import { ApiProperty, OmitType, PartialType } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class CreateOperadorDTO {
   @ApiProperty({ description: 'ID del operador' })
@@ -21,6 +27,11 @@ export class CreateOperadorDTO {
   @IsString()
   @IsNotEmpty()
   readonly role: string;
+
+  @IsOptional()
+  @IsNotEmpty()
+  @ApiProperty()
+  readonly compradorId: number;
 }
 
 export class UpdateOperadorDTO extends PartialType(

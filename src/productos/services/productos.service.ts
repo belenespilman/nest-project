@@ -1,7 +1,7 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, In } from 'typeorm';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Producto } from 'src/productos/entities/producto.entity';
+import { Producto } from 'productos/entities/producto.entity';
 import { CreateProductDto } from '../dtos/productos.dto';
 
 @Injectable()
@@ -19,7 +19,7 @@ export class ProductosService {
   }
 
   async findOne(id: number): Promise<Producto> {
-    const producto = await this.productRepo.findOne({ id });
+    const producto = await this.productRepo.findOne({ where: { id } });
     if (!producto) {
       throw new NotFoundException(`El producto con id: ${id} no existe`);
     }
@@ -45,7 +45,7 @@ export class ProductosService {
     id: number,
     payload: Partial<Producto>,
   ): Promise<Producto> {
-    const producto = await this.productRepo.findOne({ id });
+    const producto = await this.productRepo.findOne({ where: { id } });
     if (!producto) {
       throw new NotFoundException(`El producto con id: ${id} no se encuentra`);
     }
@@ -54,7 +54,7 @@ export class ProductosService {
   }
 
   async deleteProducto(id: number): Promise<void> {
-    const producto = await this.productRepo.findOne({ id });
+    const producto = await this.productRepo.findOne({ where: { id } });
     if (!producto) {
       throw new NotFoundException(`El producto con id: ${id} no se encuentra`);
     }

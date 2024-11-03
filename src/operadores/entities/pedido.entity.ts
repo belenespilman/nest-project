@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 
 import { Operador } from './operador.entity';
-import { Producto } from 'src/productos/entities/producto.entity';
+import { Producto } from '/productos/entities/producto.entity';
 
 @Entity()
 export class Pedido {
@@ -17,6 +17,12 @@ export class Pedido {
 
   @Column({ type: 'date' })
   date: Date;
+
+  // @Column()
+  // operador: Operador;
+
+  // @Column()
+  // productos: Producto[];
 
   // @ManyToOne(() => Operador, (operador) => operador.pedidos, { eager: true })
   // operador: Operador;
