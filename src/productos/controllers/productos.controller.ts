@@ -16,7 +16,7 @@ import {
   CreateProductDto,
   UpdateProductDto,
 } from '/productos/dtos/productos.dto';
-import { ProductosService } from '/productos/services/productos.service';
+import { ProductosService } from 'productos/services/productos.service';
 
 @ApiTags('Productos')
 @Controller('productos')

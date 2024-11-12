@@ -1,5 +1,5 @@
-import { DataSource } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
+import { DataSource } from 'typeorm';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
 
@@ -15,12 +15,15 @@ export default new DataSource({
   password: configService.get('POSTGRES_PASSWORD'),
   database: configService.get('POSTGRES_DB'),
   entities: [
-    path.resolve(__dirname, '..') + '/**/entities*.ts',
-    path.resolve(__dirname, '..') + '/**/entities/*.js',
+    path.resolve(__dirname, '../**/entities/*.ts'),
+    path.resolve(__dirname, '../**/entities/*.js'),
   ],
   migrations: [
-    path.resolve(__dirname, '..') + '/database/migrations/*.ts',
-    path.resolve(__dirname, '..') + '/database/migrations/*.js',
+    path.resolve(__dirname, 'migrations/*.ts'),
+    path.resolve(__dirname, 'migrations/*.js'),
   ],
+
   migrationsTableName: 'migrations',
+  logging: true,
+  synchronize: false,
 });
