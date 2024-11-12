@@ -38,7 +38,7 @@ export class PedidosService {
   }
 
   async updatePedido(id: number, payload: UpdatePedidoDTO): Promise<Pedido> {
-    const pedido = await this.pedidoRepo.findOneBy({ id });
+    const pedido = await this.pedidoRepo.findOne({ where: { id } });
     if (!pedido) {
       throw new NotFoundException(`El pedido con id: ${id} no se encuentra`);
     }
@@ -47,7 +47,7 @@ export class PedidosService {
   }
 
   async deletePedido(id: number): Promise<void> {
-    const pedido = await this.pedidoRepo.findOneBy({ id });
+    const pedido = await this.pedidoRepo.findOne({ where: { id } });
     if (!pedido) {
       throw new NotFoundException(`El pedido con id: ${id} no se encuentra`);
     }

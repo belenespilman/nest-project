@@ -11,12 +11,12 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
-import { ParseIntPipe } from 'src/common/parse-int.pipe';
+import { ParseIntPipe } from '/common/parse-int.pipe';
 import {
   CreateProductDto,
   UpdateProductDto,
-} from 'src/productos/dtos/productos.dto';
-import { ProductosService } from 'src/productos/services/productos.service';
+} from '/productos/dtos/productos.dto';
+import { ProductosService } from 'productos/services/productos.service';
 
 @ApiTags('Productos')
 @Controller('productos')

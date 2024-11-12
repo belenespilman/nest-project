@@ -3,8 +3,6 @@ import { PartialType, OmitType, ApiProperty } from '@nestjs/swagger';
 
 export class CreateCompradorDTO {
   @ApiProperty({ description: 'ID del comprador' })
-  @IsNumber()
-  @IsNotEmpty()
   readonly id: number;
 
   @ApiProperty({ description: 'Nombre del comprador' })
@@ -20,7 +18,7 @@ export class CreateCompradorDTO {
   @ApiProperty({ description: 'Teléfono del comprador' })
   @IsNumber()
   @IsNotEmpty()
-  readonly telefono: string;
+  readonly telefono: number;
 }
 
 export class UpdateCompradorDTO extends PartialType(

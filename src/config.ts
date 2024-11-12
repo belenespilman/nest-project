@@ -15,5 +15,14 @@ export default registerAs('config', () => {
       host: process.env.POSTGRES_HOST,
     },
     apiKey: process.env.APIKEY,
+
+    typeorm: {
+      type: process.env.TYPEORM_CONNECTION,
+      host: process.env.TYPEORM_HOST,
+      port: parseInt(process.env.TYPEORM_PORT, 10),
+      user: process.env.TYPEORM_USER,
+      password: process.env.TYPEORM_PASSWORD,
+      database: process.env.TYPEORM_DATABASE,
+    },
   };
 });
