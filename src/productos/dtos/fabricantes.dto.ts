@@ -11,9 +11,6 @@ import {
 
 export class CreateFabricanteDTO {
   @ApiProperty({ description: 'ID del fabricante' })
-  @IsNumber()
-  @IsPositive()
-  @IsNotEmpty()
   readonly id: number;
 
   @ApiProperty({ description: 'Nombre del fabricante' })

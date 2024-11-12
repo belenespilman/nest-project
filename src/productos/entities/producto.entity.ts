@@ -4,7 +4,9 @@ import {
   Entity,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToOne,
 } from 'typeorm';
+import { Fabricante } from './fabricante.entity';
 
 @Entity()
 export class Producto {
@@ -34,6 +36,9 @@ export class Producto {
 
   @Column({ type: 'varchar' })
   imagen: string;
+
+  @ManyToOne(() => Fabricante, (fabricante) => fabricante.products)
+  fabricante: Fabricante;
 
   // @ManyToMany(() => Pedido, pedido => pedido.productos)
   // pedidos: Pedido[];

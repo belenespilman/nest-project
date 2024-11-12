@@ -19,7 +19,7 @@ export class Comprador {
   @Column({ type: 'varchar' })
   apellido: string;
 
-  @Column({ type: 'int' })
+  @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
   telefono: number;
 
   @CreateDateColumn({

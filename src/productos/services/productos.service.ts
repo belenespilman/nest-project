@@ -2,16 +2,20 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, In } from 'typeorm';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Producto } from 'productos/entities/producto.entity';
-import { CreateProductDto } from '../dtos/productos.dto';
+import { CreateProductDto, UpdateProductDto } from '../dtos/productos.dto';
+import { FabricantesService } from './fabricantes.service';
 
 @Injectable()
 export class ProductosService {
   constructor(
     @InjectRepository(Producto) private productRepo: Repository<Producto>,
+    private fabricanteService: FabricantesService,
   ) {}
 
   async findAll(): Promise<Producto[]> {
-    const productos = await this.productRepo.find();
+    const productos = await this.productRepo.find({
+      relations: ['fabricante'],
+    });
     if (!productos.length) {
       throw new NotFoundException('No hay productos disponibles');
     }
@@ -19,7 +23,10 @@ export class ProductosService {
   }
 
   async findOne(id: number): Promise<Producto> {
-    const producto = await this.productRepo.findOne({ where: { id } });
+    const producto = await this.productRepo.findOne({
+      where: { id },
+      relations: ['fabricante'],
+    });
     if (!producto) {
       throw new NotFoundException(`El producto con id: ${id} no existe`);
     }
@@ -35,22 +42,30 @@ export class ProductosService {
   }
 
   async createProduct(
-    payload: Omit<Producto, 'createdAt' | 'updatedAt'>,
+    data: Omit<CreateProductDto, 'createdAt' | 'updatedAt'>,
   ): Promise<Producto> {
-    const newProduct = this.productRepo.create(payload);
+    const newProduct = this.productRepo.create(data);
+    if (data.fabricanteId) {
+      const fabricante = await this.fabricanteService.findOne(
+        data.fabricanteId,
+      );
+      newProduct.fabricante = fabricante;
+    }
     return await this.productRepo.save(newProduct);
   }
 
   async updateProduct(
     id: number,
-    payload: Partial<Producto>,
+    changes: UpdateProductDto,
   ): Promise<Producto> {
     const producto = await this.productRepo.findOne({ where: { id } });
-    if (!producto) {
-      throw new NotFoundException(`El producto con id: ${id} no se encuentra`);
+    if (changes.fabricanteId) {
+      const fabricante = await this.fabricanteService.findOne(
+        changes.fabricanteId,
+      );
+      producto.fabricante = fabricante;
     }
-    Object.assign(producto, payload);
-    return await this.productRepo.save(producto);
+    return this.productRepo.save(producto);
   }
 
   async deleteProducto(id: number): Promise<void> {

@@ -17,6 +17,7 @@ import {
   UpdateProductDto,
 } from '/productos/dtos/productos.dto';
 import { ProductosService } from 'productos/services/productos.service';
+import { Producto } from 'productos/entities/producto.entity';
 
 @ApiTags('Productos')
 @Controller('productos')
@@ -39,7 +40,9 @@ export class ProductosController {
 
   @Post()
   @ApiOperation({ summary: 'Crear un producto' })
-  createProducto(@Body() payload: CreateProductDto): any {
+  createProducto(
+    @Body() payload: Omit<CreateProductDto, 'createdAt' | 'updatedAt'>,
+  ): any {
     return this.productosService.createProduct(payload);
   }
 

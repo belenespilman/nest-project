@@ -44,6 +44,11 @@ export class CreateProductDto {
   @ApiProperty({ description: 'Imagen del producto' })
   @IsNotEmpty()
   readonly imagen: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsPositive()
+  readonly fabricanteId: number;
 }
 
 export class UpdateProductDto extends PartialType(
