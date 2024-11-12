@@ -9,8 +9,6 @@ import {
 
 export class CreateOperadorDTO {
   @ApiProperty({ description: 'ID del operador' })
-  @IsNumber()
-  @IsNotEmpty()
   readonly id: number;
 
   @ApiProperty({ description: 'Email del operador' })

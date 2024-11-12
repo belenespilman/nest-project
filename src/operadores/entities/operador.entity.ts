@@ -6,6 +6,7 @@ import {
   UpdateDateColumn,
   OneToOne,
   JoinColumn,
+  RelationId,
 } from 'typeorm';
 import { Comprador } from './comprador.entity';
 
@@ -40,6 +41,9 @@ export class Operador {
   })
   @JoinColumn()
   comprador: Comprador;
+
+  @RelationId((operador: Operador) => operador.comprador)
+  compradorId: number;
 
   // @OneToMany(() => Pedido, pedido => pedido.operador)
   // pedidos: Pedido[];

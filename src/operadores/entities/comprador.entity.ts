@@ -19,8 +19,8 @@ export class Comprador {
   @Column({ type: 'varchar' })
   apellido: string;
 
-  @Column({ type: 'varchar' })
-  telefono: string;
+  @Column({ type: 'int' })
+  telefono: number;
 
   @CreateDateColumn({
     type: 'timestamptz',

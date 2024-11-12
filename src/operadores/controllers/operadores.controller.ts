@@ -62,7 +62,7 @@ export class OperadoresController {
 
   @Delete('/:idOperator')
   @ApiOperation({ summary: 'Delete operator by ID' })
-  deleteOperator(@Param('idOperator', ParseIntPipe) idOperator: string): any {
+  deleteOperator(@Param('idOperator', ParseIntPipe) idOperator: number): any {
     return this.operadoresService.deleteOperador(+idOperator);
   }
 }
