@@ -5,8 +5,10 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
+  ManyToMany,
 } from 'typeorm';
 import { Fabricante } from './fabricante.entity';
+import { Categoria } from './categoria.entity';
 
 @Entity()
 export class Producto {
@@ -40,6 +42,6 @@ export class Producto {
   @ManyToOne(() => Fabricante, (fabricante) => fabricante.products)
   fabricante: Fabricante;
 
-  // @ManyToMany(() => Pedido, pedido => pedido.productos)
-  // pedidos: Pedido[];
+  @ManyToMany(() => Categoria, (categoria) => categoria.productos)
+  categorias: Categoria[];
 }

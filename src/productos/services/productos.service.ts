@@ -4,17 +4,23 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Producto } from 'productos/entities/producto.entity';
 import { CreateProductDto, UpdateProductDto } from '../dtos/productos.dto';
 import { FabricantesService } from './fabricantes.service';
+import { Fabricante } from 'productos/entities/fabricante.entity';
+import { Categoria } from 'productos/entities/categoria.entity';
 
 @Injectable()
 export class ProductosService {
   constructor(
-    @InjectRepository(Producto) private productRepo: Repository<Producto>,
-    private fabricanteService: FabricantesService,
+    @InjectRepository(Producto)
+    private readonly productRepo: Repository<Producto>,
+    @InjectRepository(Fabricante)
+    private readonly fabricanteService: FabricantesService,
+    @InjectRepository(Categoria)
+    private readonly categoriaRepo: Repository<Categoria>,
   ) {}
 
   async findAll(): Promise<Producto[]> {
     const productos = await this.productRepo.find({
-      relations: ['fabricante'],
+      relations: ['fabricante', 'categorias'],
     });
     if (!productos.length) {
       throw new NotFoundException('No hay productos disponibles');
@@ -25,7 +31,7 @@ export class ProductosService {
   async findOne(id: number): Promise<Producto> {
     const producto = await this.productRepo.findOne({
       where: { id },
-      relations: ['fabricante'],
+      relations: ['fabricante', 'categorias'],
     });
     if (!producto) {
       throw new NotFoundException(`El producto con id: ${id} no existe`);
@@ -51,6 +57,12 @@ export class ProductosService {
       );
       newProduct.fabricante = fabricante;
     }
+    if (data.categoriasId) {
+      const categoria = await this.categoriaRepo.find({
+        where: { id: In(data.categoriasId) },
+      });
+      newProduct.categorias = categoria;
+    }
     return await this.productRepo.save(newProduct);
   }
 
@@ -64,6 +76,13 @@ export class ProductosService {
         changes.fabricanteId,
       );
       producto.fabricante = fabricante;
+    }
+
+    if (changes.categoriasId) {
+      const categorias = await this.categoriaRepo.find({
+        where: { id: In(changes.categoriasId) },
+      });
+      producto.categorias = categorias;
     }
     return this.productRepo.save(producto);
   }

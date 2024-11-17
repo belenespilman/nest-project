@@ -7,6 +7,7 @@ import {
   Min,
   IsNotEmpty,
   IsDate,
+  IsArray,
 } from 'class-validator';
 
 export class CreateProductDto {
@@ -49,6 +50,11 @@ export class CreateProductDto {
   @IsNotEmpty()
   @IsPositive()
   readonly fabricanteId: number;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsArray()
+  categoriasId: number[];
 }
 
 export class UpdateProductDto extends PartialType(

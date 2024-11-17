@@ -1,5 +1,5 @@
 import { ApiProperty, PartialType, OmitType } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsArray, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class CreateCategoryDTO {
   @ApiProperty({ description: 'ID de la cateogría' })

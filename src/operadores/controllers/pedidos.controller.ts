@@ -6,9 +6,13 @@ import {
   Get,
   Post,
   Put,
+  Param,
+  Body,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { PedidosService } from '../services/pedidos.service';
+import { ParseIntPipe } from 'common/parse-int.pipe';
+import { CreatePedidoDTO, UpdatePedidoDTO } from 'operadores/dtos/pedidos.dto';
 
 @ApiTags('Pedidos')
 @Controller('pedidos')
@@ -22,20 +26,31 @@ export class PedidosController {
     return this.pedidoService.findAll();
   }
 
-  @Get()
+  @Get('/:PedidoId')
   @ApiOperation({ summary: 'Obtener pedido por ID' })
   @HttpCode(HttpStatus.ACCEPTED)
-  getPedidoById() {}
+  getPedidoById(@Param('PedidoId', ParseIntPipe) PedidoId: number) {
+    return this.pedidoService.findOne(PedidoId);
+  }
 
   @Post()
   @ApiOperation({ summary: 'Crear un pedido' })
-  createPedido() {}
+  createPedido(@Body() payload: CreatePedidoDTO) {
+    return this.pedidoService.createPedido(payload);
+  }
 
-  @Put()
+  @Put(':/PedidoId')
   @ApiOperation({ summary: 'Modificar/Actualizar un pedido' })
-  updatePedido() {}
+  updatePedido(
+    @Param('PedidoId', ParseIntPipe) PedidoId: number,
+    @Body() payload: UpdatePedidoDTO,
+  ) {
+    return this.pedidoService.updatePedido(PedidoId, payload);
+  }
 
-  @Delete()
+  @Delete(':/PedidoId')
   @ApiOperation({ summary: 'Eliminar un pedido' })
-  deletePedido() {}
+  deletePedido(@Param('PedidoId', ParseIntPipe) PedidoId: number) {
+    return this.pedidoService.deletePedido(PedidoId);
+  }
 }

@@ -1,7 +1,13 @@
 import { Producto } from '/productos/entities/producto.entity';
 import { Operador } from '../entities/operador.entity';
 import { ApiProperty, OmitType, PartialType } from '@nestjs/swagger';
-import { IsArray, IsDate, IsNotEmpty, IsNumber } from 'class-validator';
+import {
+  IsArray,
+  IsDate,
+  IsNotEmpty,
+  IsNumber,
+  IsPositive,
+} from 'class-validator';
 
 export class CreatePedidoDTO {
   @ApiProperty({ description: 'Fecha del pedido' })
@@ -22,6 +28,11 @@ export class CreatePedidoDTO {
   @IsNotEmpty()
   @IsArray()
   readonly productos: Producto[];
+
+  @ApiProperty()
+  @IsPositive()
+  @IsNotEmpty()
+  readonly compradorId: number;
 }
 
 export class UpdatePedidoDTO extends PartialType(CreatePedidoDTO) {}
