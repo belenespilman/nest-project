@@ -8,6 +8,7 @@ import {
   IsNumber,
   IsPositive,
 } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class CreatePedidoDTO {
   @ApiProperty({ description: 'Fecha del pedido' })
@@ -16,7 +17,7 @@ export class CreatePedidoDTO {
   readonly id: number;
 
   @ApiProperty({ description: 'Fecha del pedido' })
-  @IsDate()
+  @Type(() => Date)
   @IsNotEmpty()
   readonly date: Date;
 

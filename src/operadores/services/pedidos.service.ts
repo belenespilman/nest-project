@@ -17,7 +17,7 @@ export class PedidosService {
 
   async findAll(): Promise<Pedido[]> {
     const pedidos = await this.pedidoRepo.find({
-      relations: ['operador', 'productos', 'detalles', 'detalles.producto'],
+      relations: ['detalles', 'detalles.producto'],
     });
     if (!pedidos.length) {
       throw new NotFoundException('No hay pedidos disponibles');
@@ -28,7 +28,7 @@ export class PedidosService {
   async findOne(id: number): Promise<Pedido> {
     const pedido = await this.pedidoRepo.findOne({
       where: { id },
-      relations: ['operador', 'productos', 'detalles', 'detalles.producto'],
+      relations: ['detalles', 'detalles.producto'],
     });
     if (!pedido) {
       throw new NotFoundException(`El pedido con id: ${id} no existe`);
