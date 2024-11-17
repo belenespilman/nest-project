@@ -94,4 +94,27 @@ export class ProductosService {
     }
     await this.productRepo.remove(producto);
   }
+
+  async addCategoryToProduct(productoId: number, categoriaId: number) {
+    const producto = await this.productRepo.findOne({
+      where: { id: productoId },
+      relations: ['categorias'],
+    });
+    const categoria = await this.categoriaRepo.findOne({
+      where: { id: categoriaId },
+    });
+    producto.categorias.push(categoria);
+    return this.productRepo.save(producto);
+  }
+
+  async removeCategoryFromProduct(productoId: number, categoriaId: number) {
+    const producto = await this.productRepo.findOne({
+      where: { id: productoId },
+      relations: ['categorias'],
+    });
+    producto.categorias = producto.categorias.filter(
+      (item) => item.id !== categoriaId,
+    );
+    return this.productRepo.save(producto);
+  }
 }

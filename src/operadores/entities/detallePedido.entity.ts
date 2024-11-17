@@ -1,4 +1,3 @@
-import { Producto } from 'productos/entities/producto.entity';
 import {
   CreateDateColumn,
   UpdateDateColumn,
@@ -8,6 +7,7 @@ import {
   Entity,
 } from 'typeorm';
 import { Pedido } from './pedido.entity';
+import { Producto } from '../../productos/entities/producto.entity';
 
 @Entity()
 export class DetallePedido {
@@ -16,13 +16,13 @@ export class DetallePedido {
 
   @CreateDateColumn({
     type: 'timestamptz',
-    default: () => 'CURRENT_TIEMSTAMP',
+    default: () => 'CURRENT_TIMESTAMP',
   })
   createdAt: Date;
 
   @UpdateDateColumn({
     type: 'timestamptz',
-    default: () => 'CURRENT:TIMESTAMP',
+    default: () => 'CURRENT_TIMESTAMP',
   })
   updatedAt: Date;
 

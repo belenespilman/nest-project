@@ -1,17 +1,11 @@
 import {
   PrimaryGeneratedColumn,
-  Column,
   Entity,
-  ManyToMany,
   ManyToOne,
-  JoinTable,
   OneToMany,
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-
-import { Operador } from './operador.entity';
-import { Producto } from '/productos/entities/producto.entity';
 import { Comprador } from './comprador.entity';
 import { DetallePedido } from './detallePedido.entity';
 
@@ -22,13 +16,13 @@ export class Pedido {
 
   @CreateDateColumn({
     type: 'timestamptz',
-    default: () => 'CURRENT_TIEMSTAMP',
+    default: () => 'CURRENT_TIMESTAMP',
   })
   createdAt: Date;
 
   @UpdateDateColumn({
     type: 'timestamptz',
-    default: () => 'CURRENT:TIMESTAMP',
+    default: () => 'CURRENT_TIMESTAMP',
   })
   updatedAt: Date;
 
@@ -37,11 +31,4 @@ export class Pedido {
 
   @OneToMany(() => DetallePedido, (detalle) => detalle.pedido)
   detalles: DetallePedido[];
-
-  // @ManyToOne(() => Operador, (operador) => operador.pedidos, { eager: true })
-  // operador: Operador;
-
-  // @ManyToMany(() => Producto, (producto) => producto.pedidos, { eager: true })
-  // @JoinTable()
-  // productos: Producto[];
 }

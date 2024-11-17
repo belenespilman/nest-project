@@ -19,8 +19,10 @@ export default new DataSource({
   password: configService.get('POSTGRES_PASSWORD'),
   database: configService.get('POSTGRES_DB'),
   entities: [
-    path.resolve('C:UsersBelenDesktop\first-projectdist**entities*.js'),
-    path.resolve('C:UsersBelenDesktop\first-projectsrc**entities*.ts'),
+    path.join(parentDir, 'productos/entities/*.ts'),
+    path.join(parentDir, 'operadores/entities/*.ts'),
+    path.join(distDir, 'productos/entities/*.js'),
+    path.join(distDir, 'operadores/entities/*.js'),
   ],
   migrations: [
     path.resolve(__dirname, 'migrations/*.ts'),

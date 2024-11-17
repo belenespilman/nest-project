@@ -12,7 +12,9 @@ export class CategoriasService {
   ) {}
 
   async findAll(): Promise<Categoria[]> {
-    const categorias = await this.categoriaRepo.find();
+    const categorias = await this.categoriaRepo.find({
+      relations: ['productos'],
+    });
     if (!categorias.length) {
       throw new NotFoundException('No hay categorías disponibles');
     }
@@ -20,7 +22,10 @@ export class CategoriasService {
   }
 
   async findOne(id: number): Promise<Categoria> {
-    const categoria = await this.categoriaRepo.findOne({ where: { id } });
+    const categoria = await this.categoriaRepo.findOne({
+      where: { id },
+      relations: ['productos'],
+    });
     if (!categoria) {
       throw new NotFoundException(`La categoría con id: ${id} no existe`);
     }

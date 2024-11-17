@@ -44,7 +44,4 @@ export class Operador {
 
   @RelationId((operador: Operador) => operador.comprador)
   compradorId: number;
-
-  // @OneToMany(() => Pedido, pedido => pedido.operador)
-  // pedidos: Pedido[];
 }

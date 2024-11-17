@@ -1,5 +1,12 @@
 import { ApiProperty, PartialType, OmitType } from '@nestjs/swagger';
-import { IsArray, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
+import { Producto } from 'productos/entities/producto.entity';
 
 export class CreateCategoryDTO {
   @ApiProperty({ description: 'ID de la cateogría' })
@@ -11,6 +18,10 @@ export class CreateCategoryDTO {
   @IsString()
   @IsNotEmpty()
   readonly nombre: string;
+
+  @ApiProperty()
+  @IsOptional()
+  productos: Producto[];
 }
 
 export class UpdateCategoryDTO extends PartialType(
