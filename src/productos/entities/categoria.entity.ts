@@ -26,6 +26,10 @@ export class Categoria {
     default: () => 'CURRENT_TIMESTAMP',
   })
   @ManyToMany(() => Producto, (producto) => producto.categorias)
-  @JoinTable()
+  @JoinTable({
+    name: 'productos_categoria',
+    joinColumn: { name: 'categoria_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'producto_id', referencedColumnName: 'id' },
+  })
   productos: Producto[];
 }

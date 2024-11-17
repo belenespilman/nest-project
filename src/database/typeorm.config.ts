@@ -7,6 +7,10 @@ dotenv.config();
 
 const configService = new ConfigService();
 
+const parentDir = path.dirname(__dirname);
+const distDir = path.resolve(parentDir, '../dist');
+console.log(distDir);
+
 export default new DataSource({
   type: 'postgres',
   host: configService.get('POSTGRES_HOST'),
@@ -15,10 +19,8 @@ export default new DataSource({
   password: configService.get('POSTGRES_PASSWORD'),
   database: configService.get('POSTGRES_DB'),
   entities: [
-    path.resolve(__dirname, 'src/operadores/entities/*.ts'),
-    path.resolve(__dirname, 'src/productos/entities/*.ts'),
-    path.resolve(__dirname, 'dist/operadores/entities/*.js'),
-    path.resolve(__dirname, 'dist/productos/entities/*.js'),
+    path.resolve('C:UsersBelenDesktop\first-projectdist**entities*.js'),
+    path.resolve('C:UsersBelenDesktop\first-projectsrc**entities*.ts'),
   ],
   migrations: [
     path.resolve(__dirname, 'migrations/*.ts'),
