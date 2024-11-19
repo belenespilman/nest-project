@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { Operador } from './operador.entity';
 import { Pedido } from './pedido.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class Comprador {
@@ -24,12 +25,14 @@ export class Comprador {
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
   telefono: number;
 
+  @Exclude()
   @CreateDateColumn({
     type: 'timestamptz',
     default: () => 'CURRENT_TIMESTAMP',
   })
   createdAt: Date;
 
+  @Exclude()
   @UpdateDateColumn({
     type: 'timestamptz',
     default: () => 'CURRENT_TIMESTAMP',

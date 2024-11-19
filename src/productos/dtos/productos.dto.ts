@@ -8,6 +8,8 @@ import {
   IsNotEmpty,
   IsDate,
   IsArray,
+  ValidateIf,
+  IsOptional,
 } from 'class-validator';
 
 export class CreateProductDto {
@@ -60,3 +62,22 @@ export class CreateProductDto {
 export class UpdateProductDto extends PartialType(
   OmitType(CreateProductDto, ['nombre']),
 ) {}
+
+export class FilterProductDto {
+  @ApiProperty()
+  @IsPositive()
+  limit: number;
+
+  @ApiProperty()
+  @Min(0)
+  offset: number;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsPositive()
+  precioMinimo?: number;
+
+  @ApiProperty()
+  @ValidateIf((item) => item.precioMinimo !== undefined)
+  precioMaximo?: number;
+}

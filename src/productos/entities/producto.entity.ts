@@ -6,6 +6,8 @@ import {
   UpdateDateColumn,
   ManyToOne,
   ManyToMany,
+  Index,
+  JoinColumn,
 } from 'typeorm';
 import { Fabricante } from './fabricante.entity';
 import { Categoria } from './categoria.entity';
@@ -27,6 +29,7 @@ export class Producto {
   @Column({ type: 'text' })
   descripcion: string;
 
+  @Index()
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
   precio: number;
 
@@ -40,6 +43,7 @@ export class Producto {
   imagen: string;
 
   @ManyToOne(() => Fabricante, (fabricante) => fabricante.products)
+  @JoinColumn({ name: 'brand_id' })
   fabricante: Fabricante;
 
   @ManyToMany(() => Categoria, (categoria) => categoria.productos)

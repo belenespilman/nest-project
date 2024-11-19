@@ -14,6 +14,7 @@ import {
 import { ParseIntPipe } from '/common/parse-int.pipe';
 import {
   CreateProductDto,
+  FilterProductDto,
   UpdateProductDto,
 } from '/productos/dtos/productos.dto';
 import { ProductosService } from 'productos/services/productos.service';
@@ -27,8 +28,8 @@ export class ProductosController {
   @Get()
   @ApiOperation({ summary: 'Catálogo con todos los productos' })
   @HttpCode(HttpStatus.ACCEPTED)
-  getAllProducts(): any {
-    return this.productosService.findAll();
+  getAllProducts(@Query() params: FilterProductDto): any {
+    return this.productosService.findAll(params);
   }
 
   @Get('/:idProduct')

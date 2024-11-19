@@ -9,6 +9,7 @@ import {
   RelationId,
 } from 'typeorm';
 import { Comprador } from './comprador.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class Operador {
@@ -24,12 +25,14 @@ export class Operador {
   @Column({ type: 'varchar' })
   role: string;
 
+  @Exclude()
   @CreateDateColumn({
     type: 'timestamptz',
     default: () => 'CURRENT_TIMESTAMP',
   })
   createdAt: Date;
 
+  @Exclude()
   @UpdateDateColumn({
     type: 'timestamptz',
     default: () => 'CURRENT_TIMESTAMP',
@@ -39,7 +42,7 @@ export class Operador {
   @OneToOne(() => Comprador, (comprador) => comprador.operador, {
     nullable: true,
   })
-  @JoinColumn()
+  @JoinColumn({ name: 'customer_id' })
   comprador: Comprador;
 
   @RelationId((operador: Operador) => operador.comprador)
