@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Pedido } from './entities/pedido.entity';
+import { Pedido } from '../entities/pedido.entity';
 import { Repository } from 'typeorm';
-import { DetallePedido } from './entities/detallePedido.entity';
+import { DetallePedido } from '../entities/detallePedido.entity';
 import { Producto } from 'productos/entities/producto.entity';
 import {
   CreateDetallePedidoDTO,
   UpdateDetallePedidoDTO,
-} from './dtos/detallePedido.dto';
-import { UpdatePedidoDTO } from './dtos/pedidos.dto';
+} from '../dtos/detallePedido.dto';
+import { UpdatePedidoDTO } from '../dtos/pedidos.dto';
 
 @Injectable()
 export class DetallePedidoService {

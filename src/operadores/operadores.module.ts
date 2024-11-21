@@ -12,7 +12,7 @@ import { Comprador } from './entities/comprador.entity';
 import { Pedido } from './entities/pedido.entity';
 import { Operador } from './entities/operador.entity';
 import { DetallePedido } from './entities/detallePedido.entity';
-import { DetallePedidoService } from './detalle-pedido.service';
+import { DetallePedidoService } from './services/detalle-pedido.service';
 import { DetallePedidoController } from './controllers/detalle-pedido.controller';
 
 @Module({
