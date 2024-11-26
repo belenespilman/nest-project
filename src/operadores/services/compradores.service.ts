@@ -1,6 +1,4 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { Comprador } from '../entities/comprador.entity';
 import {
   CreateCompradorDTO,
@@ -9,10 +7,11 @@ import {
 
 @Injectable()
 export class CompradoresService {
-  constructor(
-    @InjectRepository(Comprador)
-    private readonly compradorRepo: Repository<Comprador>,
-  ) {}
+  private readonly compradorRepo: any = [
+    { id: 1, name: 'Producto 1', price: 100 },
+    { id: 2, name: 'Producto 2', price: 200 },
+  ];
+  constructor() {}
 
   async findAll(): Promise<Comprador[]> {
     const compradores = await this.compradorRepo.find();

@@ -1,19 +1,21 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+
 import { Pedido } from '../entities/pedido.entity';
 import { CreatePedidoDTO, UpdatePedidoDTO } from '../dtos/pedidos.dto';
 import { Comprador } from 'operadores/entities/comprador.entity';
 
 @Injectable()
 export class PedidosService {
-  constructor(
-    @InjectRepository(Pedido)
-    private readonly pedidoRepo: Repository<Pedido>,
+  private readonly pedidoRepo: any = [
+    { id: 1, name: 'Producto 1', price: 100 },
+    { id: 2, name: 'Producto 2', price: 200 },
+  ];
 
-    @InjectRepository(Comprador)
-    private readonly compradorRepo: Repository<Comprador>,
-  ) {}
+  private readonly compradorRepo: any = [
+    { id: 1, name: 'Producto 1', price: 100 },
+    { id: 2, name: 'Producto 2', price: 200 },
+  ];
+  constructor() {}
 
   async findAll(): Promise<Pedido[]> {
     const pedidos = await this.pedidoRepo.find({
@@ -42,7 +44,7 @@ export class PedidosService {
       const customer = await this.compradorRepo.findOne({
         where: { id: data.compradorId },
       });
-      pedido.comprador = customer;
+      // pedido.comprador = customer;
     }
     return this.pedidoRepo.save(pedido);
   }

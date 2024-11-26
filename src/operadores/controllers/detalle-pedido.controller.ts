@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ParseIntPipe } from 'common/parse-int.pipe';
-import { DetallePedidoService } from 'operadores/detalle-pedido.service';
+import { DetallePedidoService } from 'operadores/services/detalle-pedido.service';
 import {
   CreateDetallePedidoDTO,
   UpdateDetallePedidoDTO,

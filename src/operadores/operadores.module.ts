@@ -7,19 +7,15 @@ import { OperadoresService } from './services/operadores.service';
 import { PedidosService } from './services/pedidos.service';
 import { ProductosService } from '/productos/services/productos.service';
 import { ProductosModule } from '/productos/productos.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { Comprador } from './entities/comprador.entity';
 import { Pedido } from './entities/pedido.entity';
 import { Operador } from './entities/operador.entity';
 import { DetallePedido } from './entities/detallePedido.entity';
-import { DetallePedidoService } from './detalle-pedido.service';
+import { DetallePedidoService } from './services/detalle-pedido.service';
 import { DetallePedidoController } from './controllers/detalle-pedido.controller';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Comprador, Pedido, Operador, DetallePedido]),
-    ProductosModule,
-  ],
+  imports: [ProductosModule],
   controllers: [
     CompradoresController,
     PedidosController,
@@ -32,6 +28,5 @@ import { DetallePedidoController } from './controllers/detalle-pedido.controller
     OperadoresService,
     DetallePedidoService,
   ],
-  exports: [TypeOrmModule],
 })
 export class OperadoresModule {}

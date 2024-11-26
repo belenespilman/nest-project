@@ -1,6 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+
 import { Operador } from '../entities/operador.entity';
 import { CreateOperadorDTO, UpdateOperadorDTO } from '../dtos/operadores.dto';
 import { ProductosService } from 'productos/services/productos.service';
@@ -9,9 +8,11 @@ import { CompradoresService } from './compradores.service';
 
 @Injectable()
 export class OperadoresService {
+  private readonly operadorRepo: any = [
+    { id: 1, name: 'Producto 1', price: 100 },
+    { id: 2, name: 'Producto 2', price: 200 },
+  ];
   constructor(
-    @InjectRepository(Operador)
-    private readonly operadorRepo: Repository<Operador>,
     private productosService: ProductosService,
     private compradoresService: CompradoresService,
   ) {}

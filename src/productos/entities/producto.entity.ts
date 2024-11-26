@@ -1,51 +1,27 @@
-import {
-  PrimaryGeneratedColumn,
-  Column,
-  Entity,
-  CreateDateColumn,
-  UpdateDateColumn,
-  ManyToOne,
-  ManyToMany,
-  Index,
-  JoinColumn,
-} from 'typeorm';
-import { Fabricante } from './fabricante.entity';
-import { Categoria } from './categoria.entity';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-@Entity()
+@Schema()
 export class Producto {
-  @PrimaryGeneratedColumn()
+  @Prop()
   id: number;
 
-  @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
-  createdAt: Date;
-
-  @UpdateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
-  updatedAt: Date;
-
-  @Column({ type: 'varchar', length: 255, unique: true })
+  @Prop({ required: true })
   nombre: string;
 
-  @Column({ type: 'text' })
+  @Prop()
   descripcion: string;
 
-  @Index()
-  @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
+  @Prop({ type: Number })
   precio: number;
 
-  @Column({ type: 'int' })
+  @Prop({ type: Number })
   stock: number;
 
-  @Column({ type: 'varchar' })
+  @Prop()
   origen: string;
 
-  @Column({ type: 'varchar' })
+  @Prop()
   imagen: string;
-
-  @ManyToOne(() => Fabricante, (fabricante) => fabricante.products)
-  @JoinColumn({ name: 'brand_id' })
-  fabricante: Fabricante;
-
-  @ManyToMany(() => Categoria, (categoria) => categoria.productos)
-  categorias: Categoria[];
 }
+
+export const ProductoSchema = SchemaFactory.createForClass(Producto);

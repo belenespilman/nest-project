@@ -1,110 +1,85 @@
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, In, Between } from 'typeorm';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Producto } from 'productos/entities/producto.entity';
-import {
-  CreateProductDto,
-  FilterProductDto,
-  UpdateProductDto,
-} from '../dtos/productos.dto';
+import { CreateProductDto, UpdateProductDto } from '../dtos/productos.dto';
 import { FabricantesService } from './fabricantes.service';
-import { Fabricante } from 'productos/entities/fabricante.entity';
-import { Categoria } from 'productos/entities/categoria.entity';
-import { take } from 'rxjs';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class ProductosService {
+  private readonly productRepo: any = [
+    { id: 1, name: 'Producto 1', price: 100 },
+    { id: 2, name: 'Producto 2', price: 200 },
+  ];
+
+  private readonly categoriaRepo: any = [
+    { id: 1, name: 'Producto 1', price: 100 },
+    { id: 2, name: 'Producto 2', price: 200 },
+  ];
   constructor(
-    @InjectRepository(Producto)
-    private readonly productRepo: Repository<Producto>,
-    @InjectRepository(Fabricante)
-    private readonly fabricanteService: FabricantesService,
-    @InjectRepository(Categoria)
-    private readonly categoriaRepo: Repository<Categoria>,
+    private fabricanteService: FabricantesService,
+    @InjectModel(Producto.name) private productModel: Model<Producto>,
   ) {}
 
-  async findAll(params?: FilterProductDto): Promise<Producto[]> {
-    if (params) {
-      const { limit, offset } = params;
-      const where: Record<string, any> = {};
-      const { precioMinimo, precioMaximo } = params;
-      if (precioMinimo && precioMaximo) {
-        where.precio = Between(precioMinimo, precioMaximo);
-      }
-      return this.productRepo.find({
-        relations: ['categorias'],
-        where,
-        take: limit,
-        skip: offset,
-      });
-    }
-    const productos = await this.productRepo.find({
-      relations: ['categorias'],
-    });
-    if (!productos.length) {
-      throw new NotFoundException('No hay productos disponibles');
-    }
-    return productos;
+  async findAll() {
+    return this.productModel.find().exec();
   }
 
-  async findOne(id: number): Promise<Producto> {
-    const producto = await this.productRepo.findOne({
-      where: { id },
-      relations: ['fabricante', 'categorias'],
-    });
+  async findOne(id: string): Promise<Producto> {
+    const producto = await this.productModel.findById(id).exec();
     if (!producto) {
       throw new NotFoundException(`El producto con id: ${id} no existe`);
     }
     return producto;
   }
 
-  async getProductsByIds(ids: number[]): Promise<Producto[]> {
-    return await this.productRepo.find({
-      where: {
-        id: In(ids),
-      },
-    });
-  }
+  // async getProductsByIds(ids: number[]): Promise<Producto[]> {
+  //   return await this.productRepo.find({
+  //     where: {
+  //       id: In(ids),
+  //     },
+  //   });
+  // }
 
-  async createProduct(
-    data: Omit<CreateProductDto, 'createdAt' | 'updatedAt'>,
-  ): Promise<Producto> {
-    const newProduct = this.productRepo.create(data);
-    if (data.fabricanteId) {
-      const fabricante = await this.fabricanteService.findOne(
-        data.fabricanteId,
-      );
-      newProduct.fabricante = fabricante;
-    }
-    if (data.categoriasId) {
-      const categoria = await this.categoriaRepo.find({
-        where: { id: In(data.categoriasId) },
-      });
-      newProduct.categorias = categoria;
-    }
-    return await this.productRepo.save(newProduct);
-  }
+  // async createProduct(
+  //   data: Omit<CreateProductDto, 'createdAt' | 'updatedAt'>,
+  // ): Promise<Producto> {
+  //   const newProduct = this.productRepo.create(data);
+  //   if (data.fabricanteId) {
+  //     const fabricante = await this.fabricanteService.findOne(
+  //       data.fabricanteId,
+  //     );
+  //     newProduct.fabricante = fabricante;
+  //   }
+  //   if (data.categoriasId) {
+  //     const categoria = await this.categoriaRepo.find({
+  //       where: { id: In(data.categoriasId) },
+  //     });
+  //     newProduct.categorias = categoria;
+  //   }
+  //   return await this.productRepo.save(newProduct);
+  // }
 
-  async updateProduct(
-    id: number,
-    changes: UpdateProductDto,
-  ): Promise<Producto> {
-    const producto = await this.productRepo.findOne({ where: { id } });
-    if (changes.fabricanteId) {
-      const fabricante = await this.fabricanteService.findOne(
-        changes.fabricanteId,
-      );
-      producto.fabricante = fabricante;
-    }
+  // async updateProduct(
+  //   id: number,
+  //   changes: UpdateProductDto,
+  // ): Promise<Producto> {
+  //   const producto = await this.productRepo.findOne({ where: { id } });
+  //   if (changes.fabricanteId) {
+  //     const fabricante = await this.fabricanteService.findOne(
+  //       changes.fabricanteId,
+  //     );
+  //     producto.fabricante = fabricante;
+  //   }
 
-    if (changes.categoriasId) {
-      const categorias = await this.categoriaRepo.find({
-        where: { id: In(changes.categoriasId) },
-      });
-      producto.categorias = categorias;
-    }
-    return this.productRepo.save(producto);
-  }
+  //   if (changes.categoriasId) {
+  //     const categorias = await this.categoriaRepo.find({
+  //       where: { id: In(changes.categoriasId) },
+  //     });
+  //     producto.categorias = categorias;
+  //   }
+  //   return this.productRepo.save(producto);
+  // }
 
   async deleteProducto(id: number): Promise<void> {
     const producto = await this.productRepo.findOne({ where: { id } });

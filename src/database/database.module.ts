@@ -1,28 +1,38 @@
 import { Global, Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigType } from '@nestjs/config';
+import { ConfigService, ConfigType } from '@nestjs/config';
 import config from '../config';
+import { MongoClient } from 'mongodb';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Global()
 @Module({
   imports: [
-    TypeOrmModule.forRootAsync({
+    MongooseModule.forRootAsync({
       inject: [config.KEY],
-      useFactory: (configService: ConfigType<typeof config>) => {
+      useFactory: async (configService: ConfigType<typeof config>) => {
+        const { connection, user, password, host, port, dbName } =
+          configService.mongo;
         return {
-          type: 'postgres',
-          host: configService.postgres.host,
-          port: +configService.postgres.port,
-          username: configService.postgres.user,
-          password: configService.postgres.password,
-          database: configService.postgres.dbName,
-
-          synchronize: false,
-          autoLoadEntities: true,
+          uri: `${connection}://${user}:${password}@${host}:${port}`,
         };
       },
     }),
   ],
-  exports: [TypeOrmModule],
+  providers: [
+    {
+      inject: [config.KEY],
+      provide: 'MONGO',
+      useFactory: async (configService: ConfigType<typeof config>) => {
+        const { connection, user, password, host, port, dbName } =
+          configService.mongo;
+        const uri = `${connection}://${user}:${password}@${host}:${port}`;
+        const client = new MongoClient(uri, { useNewUrlParser: true });
+        await client.connect();
+        const database = client.db(dbName);
+        return database;
+      },
+    },
+  ],
+  exports: ['MONGO', MongooseModule],
 })
 export class DatabaseModule {}

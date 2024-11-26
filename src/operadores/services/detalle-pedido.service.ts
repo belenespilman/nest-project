@@ -1,27 +1,34 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Pedido } from './entities/pedido.entity';
-import { Repository } from 'typeorm';
-import { DetallePedido } from './entities/detallePedido.entity';
+import { Pedido } from '../entities/pedido.entity';
+import { DetallePedido } from '../entities/detallePedido.entity';
 import { Producto } from 'productos/entities/producto.entity';
 import {
   CreateDetallePedidoDTO,
   UpdateDetallePedidoDTO,
-} from './dtos/detallePedido.dto';
-import { UpdatePedidoDTO } from './dtos/pedidos.dto';
+} from '../dtos/detallePedido.dto';
+import { UpdatePedidoDTO } from '../dtos/pedidos.dto';
 
 @Injectable()
 export class DetallePedidoService {
-  constructor(
-    @InjectRepository(Pedido) private pedidoRepo: Repository<Pedido>,
-    @InjectRepository(DetallePedido)
-    private detalleRepo: Repository<DetallePedido>,
-    @InjectRepository(Producto) private productoRepo: Repository<Producto>,
-  ) {}
+  private readonly detalleRepo: any = [
+    { id: 1, name: 'Producto 1', price: 100 },
+    { id: 2, name: 'Producto 2', price: 200 },
+  ];
+
+  private readonly pedidoRepo: any = [
+    { id: 1, name: 'Producto 1', price: 100 },
+    { id: 2, name: 'Producto 2', price: 200 },
+  ];
+
+  private readonly productoRepo: any = [
+    { id: 1, name: 'Producto 1', price: 100 },
+    { id: 2, name: 'Producto 2', price: 200 },
+  ];
+  constructor() {}
 
   async findAll() {
     return await this.detalleRepo.find({
-      relations: ['pedido', 'prodcuto'],
+      relations: ['pedido', 'producto'],
     });
   }
 
@@ -41,8 +48,8 @@ export class DetallePedidoService {
     });
 
     const detalle = new DetallePedido();
-    detalle.pedido = pedido;
-    detalle.producto = producto;
+    // detalle.pedido = pedido;
+    // detalle.producto = producto;
     detalle.cantidad = data.cantidad;
     return this.detalleRepo.save(detalle);
   }

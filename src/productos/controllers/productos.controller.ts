@@ -25,36 +25,36 @@ import { Producto } from 'productos/entities/producto.entity';
 export class ProductosController {
   constructor(private productosService: ProductosService) {}
 
-  @Get()
-  @ApiOperation({ summary: 'Catálogo con todos los productos' })
-  @HttpCode(HttpStatus.ACCEPTED)
-  getAllProducts(@Query() params: FilterProductDto): any {
-    return this.productosService.findAll(params);
-  }
+  // @Get()
+  // @ApiOperation({ summary: 'Catálogo con todos los productos' })
+  // @HttpCode(HttpStatus.ACCEPTED)
+  // getAllProducts(@Query() params: FilterProductDto): any {
+  //   return this.productosService.findAll(params);
+  // }
 
-  @Get('/:idProduct')
-  @ApiOperation({ summary: 'Obtener producto por ID' })
-  @HttpCode(HttpStatus.ACCEPTED)
-  getProductById(@Param('idProduct', ParseIntPipe) idProduct: number): any {
-    return this.productosService.findOne(idProduct);
-  }
+  // @Get('/:idProduct')
+  // @ApiOperation({ summary: 'Obtener producto por ID' })
+  // @HttpCode(HttpStatus.ACCEPTED)
+  // getProductById(@Param('idProduct', ParseIntPipe) idProduct: number): any {
+  //   return this.productosService.findOne(idProduct);
+  // }
 
-  @Post()
-  @ApiOperation({ summary: 'Crear un producto' })
-  createProducto(
-    @Body() payload: Omit<CreateProductDto, 'createdAt' | 'updatedAt'>,
-  ): any {
-    return this.productosService.createProduct(payload);
-  }
+  // @Post()
+  // @ApiOperation({ summary: 'Crear un producto' })
+  // createProducto(
+  //   @Body() payload: Omit<CreateProductDto, 'createdAt' | 'updatedAt'>,
+  // ): any {
+  //   return this.productosService.createProduct(payload);
+  // }
 
-  @Put('/:idProduct')
-  @ApiOperation({ summary: 'Modificar/Actualizar un producto por ID' })
-  updateProduct(
-    @Param('idProduct', ParseIntPipe) idProduct: string,
-    @Body() body: UpdateProductDto,
-  ): any {
-    return this.productosService.updateProduct(+idProduct, body);
-  }
+  // @Put('/:idProduct')
+  // @ApiOperation({ summary: 'Modificar/Actualizar un producto por ID' })
+  // updateProduct(
+  //   @Param('idProduct', ParseIntPipe) idProduct: string,
+  //   @Body() body: UpdateProductDto,
+  // ): any {
+  //   return this.productosService.updateProduct(+idProduct, body);
+  // }
 
   @Put(':id/categorias/:categoriaId')
   @ApiOperation({ summary: 'Añadir categoria a un producto' })

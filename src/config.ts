@@ -7,22 +7,15 @@ export default registerAs('config', () => {
       port: process.env.DATABASE_PORT,
     },
 
-    postgres: {
-      dbName: process.env.POSTGRES_DB,
-      port: parseInt(process.env.POSTGRES_PORT, 10),
-      user: process.env.POSTGRES_USER,
-      password: process.env.POSTGRES_PASSWORD,
-      host: process.env.POSTGRES_HOST,
-    },
     apiKey: process.env.APIKEY,
 
-    typeorm: {
-      type: process.env.TYPEORM_CONNECTION,
-      host: process.env.TYPEORM_HOST,
-      port: parseInt(process.env.TYPEORM_PORT, 10),
-      user: process.env.TYPEORM_USER,
-      password: process.env.TYPEORM_PASSWORD,
-      database: process.env.TYPEORM_DATABASE,
+    mongo: {
+      dbName: process.env.MONGO_DB,
+      user: process.env.MONGO_ROOT_USER,
+      password: process.env.MONGO_ROOT_PASSWORD,
+      port: parseInt(process.env.MONGO_PORT, 10),
+      host: process.env.MONGO_HOST,
+      connection: process.env.MONGO_CONNECTION,
     },
   };
 });
