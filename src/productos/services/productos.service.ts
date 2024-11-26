@@ -4,6 +4,7 @@ import { CreateProductDto, UpdateProductDto } from '../dtos/productos.dto';
 import { FabricantesService } from './fabricantes.service';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { throwError } from 'rxjs';
 
 @Injectable()
 export class ProductosService {
@@ -33,60 +34,29 @@ export class ProductosService {
     return producto;
   }
 
-  // async getProductsByIds(ids: number[]): Promise<Producto[]> {
-  //   return await this.productRepo.find({
-  //     where: {
-  //       id: In(ids),
-  //     },
-  //   });
-  // }
+  async createProduct(data: CreateProductDto) {
+    const newProduct = new this.productModel(data);
+    return newProduct.save();
+  }
 
-  // async createProduct(
-  //   data: Omit<CreateProductDto, 'createdAt' | 'updatedAt'>,
-  // ): Promise<Producto> {
-  //   const newProduct = this.productRepo.create(data);
-  //   if (data.fabricanteId) {
-  //     const fabricante = await this.fabricanteService.findOne(
-  //       data.fabricanteId,
-  //     );
-  //     newProduct.fabricante = fabricante;
-  //   }
-  //   if (data.categoriasId) {
-  //     const categoria = await this.categoriaRepo.find({
-  //       where: { id: In(data.categoriasId) },
-  //     });
-  //     newProduct.categorias = categoria;
-  //   }
-  //   return await this.productRepo.save(newProduct);
-  // }
+  async updateProduct(id: string, changes: UpdateProductDto) {
+    const product = this.productModel
+      .findByIdAndUpdate(id, { $set: changes }, { new: true })
+      .exec();
+    if (!product) {
+      throw new NotFoundException(`Product with #id ${id} no encontrado`);
+    }
+    return product;
+  }
 
-  // async updateProduct(
-  //   id: number,
-  //   changes: UpdateProductDto,
-  // ): Promise<Producto> {
-  //   const producto = await this.productRepo.findOne({ where: { id } });
-  //   if (changes.fabricanteId) {
-  //     const fabricante = await this.fabricanteService.findOne(
-  //       changes.fabricanteId,
-  //     );
-  //     producto.fabricante = fabricante;
-  //   }
+  async deleteProducto(id: string): Promise<void> {
+    const producto = await this.productModel.findById(id);
 
-  //   if (changes.categoriasId) {
-  //     const categorias = await this.categoriaRepo.find({
-  //       where: { id: In(changes.categoriasId) },
-  //     });
-  //     producto.categorias = categorias;
-  //   }
-  //   return this.productRepo.save(producto);
-  // }
-
-  async deleteProducto(id: number): Promise<void> {
-    const producto = await this.productRepo.findOne({ where: { id } });
     if (!producto) {
       throw new NotFoundException(`El producto con id: ${id} no se encuentra`);
     }
-    await this.productRepo.remove(producto);
+
+    await this.productModel.findByIdAndDelete(id);
   }
 
   async addCategoryToProduct(productoId: number, categoriaId: number) {
