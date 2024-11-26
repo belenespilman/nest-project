@@ -1,28 +1,31 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Producto } from 'productos/entities/producto.entity';
-import { CreateProductDto, UpdateProductDto } from '../dtos/productos.dto';
+import {
+  CreateProductDto,
+  FilterProductDto,
+  UpdateProductDto,
+} from '../dtos/productos.dto';
 import { FabricantesService } from './fabricantes.service';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { throwError } from 'rxjs';
+import { Model, FilterQuery } from 'mongoose';
 
 @Injectable()
 export class ProductosService {
-  private readonly productRepo: any = [
-    { id: 1, name: 'Producto 1', price: 100 },
-    { id: 2, name: 'Producto 2', price: 200 },
-  ];
-
-  private readonly categoriaRepo: any = [
-    { id: 1, name: 'Producto 1', price: 100 },
-    { id: 2, name: 'Producto 2', price: 200 },
-  ];
   constructor(
     private fabricanteService: FabricantesService,
     @InjectModel(Producto.name) private productModel: Model<Producto>,
   ) {}
 
-  async findAll() {
+  async findAll(params?: FilterProductDto) {
+    if (params) {
+      const filters: FilterQuery<Producto> = {};
+      const { precioMinimo, precioMaximo } = params;
+      const { limit, offset } = params;
+      if (precioMinimo && precioMaximo) {
+        filters.precio = { $gte: precioMinimo, $lte: precioMaximo };
+      }
+      return this.productModel.find(filters).skip(offset).limit(limit).exec();
+    }
     return this.productModel.find().exec();
   }
 
@@ -36,7 +39,7 @@ export class ProductosService {
 
   async createProduct(data: CreateProductDto) {
     const newProduct = new this.productModel(data);
-    return newProduct.save();
+    return await newProduct.save();
   }
 
   async updateProduct(id: string, changes: UpdateProductDto) {
@@ -59,26 +62,26 @@ export class ProductosService {
     await this.productModel.findByIdAndDelete(id);
   }
 
-  async addCategoryToProduct(productoId: number, categoriaId: number) {
-    const producto = await this.productRepo.findOne({
-      where: { id: productoId },
-      relations: ['categorias'],
-    });
-    const categoria = await this.categoriaRepo.findOne({
-      where: { id: categoriaId },
-    });
-    producto.categorias.push(categoria);
-    return this.productRepo.save(producto);
-  }
+  // async addCategoryToProduct(productoId: number, categoriaId: number) {
+  //   const producto = await this.productRepo.findOne({
+  //     where: { id: productoId },
+  //     relations: ['categorias'],
+  //   });
+  //   const categoria = await this.categoriaRepo.findOne({
+  //     where: { id: categoriaId },
+  //   });
+  //   producto.categorias.push(categoria);
+  //   return this.productRepo.save(producto);
+  // }
 
-  async removeCategoryFromProduct(productoId: number, categoriaId: number) {
-    const producto = await this.productRepo.findOne({
-      where: { id: productoId },
-      relations: ['categorias'],
-    });
-    producto.categorias = producto.categorias.filter(
-      (item) => item.id !== categoriaId,
-    );
-    return this.productRepo.save(producto);
-  }
+  // async removeCategoryFromProduct(productoId: number, categoriaId: number) {
+  //   const producto = await this.productRepo.findOne({
+  //     where: { id: productoId },
+  //     relations: ['categorias'],
+  //   });
+  //   producto.categorias = producto.categorias.filter(
+  //     (item) => item.id !== categoriaId,
+  //   );
+  //   return this.productRepo.save(producto);
+  // }
 }

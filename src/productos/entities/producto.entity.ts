@@ -1,25 +1,29 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Expose } from 'class-transformer';
 
 @Schema()
 export class Producto {
-  @Prop()
-  id: number;
-
+  @Expose()
   @Prop({ required: true })
   nombre: string;
 
+  @Expose()
   @Prop()
   descripcion: string;
 
-  @Prop({ type: Number })
+  @Expose()
+  @Prop({ type: Number, index: true })
   precio: number;
 
+  @Expose()
   @Prop({ type: Number })
   stock: number;
 
+  @Expose()
   @Prop()
   origen: string;
 
+  @Expose()
   @Prop()
   imagen: string;
 }

@@ -15,7 +15,7 @@ import {
 export class CreateProductDto {
   @IsNumber()
   @IsNotEmpty()
-  readonly id: number;
+  readonly id: string;
 
   @ApiProperty({ description: 'Nombre del producto' })
   @IsString()
@@ -48,15 +48,15 @@ export class CreateProductDto {
   @IsNotEmpty()
   readonly imagen: string;
 
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsPositive()
-  readonly fabricanteId: number;
+  // @ApiProperty()
+  // @IsNotEmpty()
+  // @IsPositive()
+  // readonly fabricanteId: number;
 
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsArray()
-  categoriasId: number[];
+  // @ApiProperty()
+  // @IsNotEmpty()
+  // @IsArray()
+  // categoriasId: number[];
 }
 
 export class UpdateProductDto extends PartialType(

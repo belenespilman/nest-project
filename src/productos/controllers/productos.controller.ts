@@ -11,14 +11,12 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
-import { ParseIntPipe } from '/common/parse-int.pipe';
 import {
   CreateProductDto,
   FilterProductDto,
   UpdateProductDto,
 } from '/productos/dtos/productos.dto';
 import { ProductosService } from 'productos/services/productos.service';
-import { Producto } from 'productos/entities/producto.entity';
 import { MongoldPipe } from 'common/mongold.pipe';
 
 @ApiTags('Productos')
@@ -30,7 +28,7 @@ export class ProductosController {
   @ApiOperation({ summary: 'Catálogo con todos los productos' })
   @HttpCode(HttpStatus.ACCEPTED)
   getAllProducts(@Query() params: FilterProductDto): any {
-    return this.productosService.findAll();
+    return this.productosService.findAll(params);
   }
 
   @Get('/:idProduct')
@@ -57,23 +55,23 @@ export class ProductosController {
     return this.productosService.updateProduct(idProduct, body);
   }
 
-  @Put(':id/categorias/:categoriaId')
-  @ApiOperation({ summary: 'Añadir categoria a un producto' })
-  addCategory(
-    @Param('id') id: number,
-    @Param('categoriaId') categoriaId: number,
-  ) {
-    return this.productosService.addCategoryToProduct(id, categoriaId);
-  }
+  // @Put(':id/categorias/:categoriaId')
+  // @ApiOperation({ summary: 'Añadir categoria a un producto' })
+  // addCategory(
+  //   @Param('id') id: number,
+  //   @Param('categoriaId') categoriaId: number,
+  // ) {
+  //   return this.productosService.addCategoryToProduct(id, categoriaId);
+  // }
 
-  @Delete(':id/categorias/:categoriaId')
-  @ApiOperation({ summary: 'Eliminar categoria de un producto' })
-  removeCategory(
-    @Param('id') id: number,
-    @Param('categoriaId') categoriaId: number,
-  ) {
-    return this.productosService.removeCategoryFromProduct(id, categoriaId);
-  }
+  // @Delete(':id/categorias/:categoriaId')
+  // @ApiOperation({ summary: 'Eliminar categoria de un producto' })
+  // removeCategory(
+  //   @Param('id') id: number,
+  //   @Param('categoriaId') categoriaId: number,
+  // ) {
+  //   return this.productosService.removeCategoryFromProduct(id, categoriaId);
+  // }
 
   @Delete('/:idProduct')
   @ApiOperation({ summary: 'Eliminar un producto por ID' })
