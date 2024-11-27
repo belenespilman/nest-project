@@ -10,6 +10,7 @@ import {
   Body,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { MongoldPipe } from 'common/mongold.pipe';
 import { ParseIntPipe } from 'common/parse-int.pipe';
 import {
   CreateCompradorDTO,
@@ -33,10 +34,10 @@ export class CompradoresController {
   @ApiOperation({ summary: 'Obtener comprador por ID' })
   @HttpCode(HttpStatus.ACCEPTED)
   getCompradorbyId(
-    @Param('idComprador', ParseIntPipe) idComprador: number,
+    @Param('idComprador', MongoldPipe) idComprador: string,
   ): any {
     {
-      return this.compradoresService.findOne(+idComprador);
+      return this.compradoresService.findOne(idComprador);
     }
   }
 
@@ -49,17 +50,15 @@ export class CompradoresController {
   @Put('/:idComprador')
   @ApiOperation({ summary: 'Actualizar Comprador' })
   updateComprador(
-    @Param('IdComprador', ParseIntPipe) idComprador: number,
+    @Param('IdComprador', MongoldPipe) idComprador: string,
     @Body() body: UpdateCompradorDTO,
   ): any {
-    return this.compradoresService.updateComprador(+idComprador, body);
+    return this.compradoresService.updateComprador(idComprador, body);
   }
 
   @Delete('/:idComprador')
   @ApiOperation({ summary: 'Eliminar un comprador' })
-  deleteComprador(
-    @Param('idComprador', ParseIntPipe) idComprador: number,
-  ): any {
-    return this.compradoresService.removeComprador(+idComprador);
+  deleteComprador(@Param('idComprador', MongoldPipe) idComprador: string): any {
+    return this.compradoresService.removeComprador(idComprador);
   }
 }

@@ -45,11 +45,11 @@ export class OperadoresController {
   //   return this.operadoresService.getTasks();
   // }
 
-  @Post()
-  @ApiOperation({ summary: 'Crear operador' })
-  createOperador(@Body() payload: CreateOperadorDTO): any {
-    return this.operadoresService.createOperador(payload);
-  }
+  // @Post()
+  // @ApiOperation({ summary: 'Crear operador' })
+  // createOperador(@Body() payload: CreateOperadorDTO): any {
+  //   return this.operadoresService.createOperador(payload);
+  // }
 
   @Put('/:idOperator')
   @ApiOperation({ summary: 'Actualizar operador' })

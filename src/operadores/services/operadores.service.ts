@@ -38,16 +38,16 @@ export class OperadoresService {
     return operador;
   }
 
-  async createOperador(payload: CreateOperadorDTO): Promise<Operador> {
-    const newOperador = this.operadorRepo.create(payload);
-    if (payload.compradorId) {
-      const comprador = await this.compradoresService.findOne(
-        payload.compradorId,
-      );
-      newOperador.comprador = comprador;
-    }
-    return this.operadorRepo.save(newOperador);
-  }
+  // async createOperador(payload: CreateOperadorDTO): Promise<Operador> {
+  //   const newOperador = this.operadorRepo.create(payload);
+  //   if (payload.compradorId) {
+  //     const comprador = await this.compradoresService.findOne(
+  //       payload.compradorId,
+  //     );
+  //     newOperador.comprador = comprador;
+  //   }
+  //   return this.operadorRepo.save(newOperador);
+  // }
 
   async updateOperador(
     id: number,

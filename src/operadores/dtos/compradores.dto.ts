@@ -1,4 +1,4 @@
-import { IsNumber, IsString, IsNotEmpty } from 'class-validator';
+import { IsNumber, IsString, IsNotEmpty, IsArray } from 'class-validator';
 import { PartialType, OmitType, ApiProperty } from '@nestjs/swagger';
 
 export class CreateCompradorDTO {
@@ -19,6 +19,11 @@ export class CreateCompradorDTO {
   @IsNumber()
   @IsNotEmpty()
   readonly telefono: number;
+
+  @ApiProperty()
+  @IsArray()
+  @IsNotEmpty()
+  readonly direcciones: any;
 }
 
 export class UpdateCompradorDTO extends PartialType(

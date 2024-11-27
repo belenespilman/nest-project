@@ -4,53 +4,50 @@ import {
   CreateCompradorDTO,
   UpdateCompradorDTO,
 } from '../dtos/compradores.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class CompradoresService {
-  private readonly compradorRepo: any = [
-    { id: 1, name: 'Producto 1', price: 100 },
-    { id: 2, name: 'Producto 2', price: 200 },
-  ];
-  constructor() {}
+  constructor(
+    @InjectModel(Comprador.name) private compradorModel: Model<Comprador>,
+  ) {}
 
   async findAll(): Promise<Comprador[]> {
-    const compradores = await this.compradorRepo.find();
-    if (!compradores.length) {
-      throw new NotFoundException('No hay compradores disponibles');
-    }
-    return compradores;
+    return this.compradorModel.find().exec();
   }
 
-  async findOne(id: number): Promise<Comprador> {
-    const comprador = await this.compradorRepo.findOne({ where: { id } });
+  async findOne(id: string): Promise<Comprador> {
+    const comprador = await this.compradorModel.findById(id).exec();
     if (!comprador) {
-      throw new NotFoundException(`El comprador con id: ${id} no existe`);
+      throw new NotFoundException('comprador no encontrado');
     }
     return comprador;
   }
 
-  async createComprador(payload: CreateCompradorDTO): Promise<Comprador> {
-    const newComprador = this.compradorRepo.create(payload);
-    return await this.compradorRepo.save(newComprador);
+  async createComprador(data: CreateCompradorDTO): Promise<Comprador> {
+    const newComprador = new this.compradorModel(data);
+    return await newComprador.save();
   }
 
   async updateComprador(
-    id: number,
-    payload: UpdateCompradorDTO,
+    id: string,
+    changes: UpdateCompradorDTO,
   ): Promise<Comprador> {
-    const comprador = await this.compradorRepo.findOne({ where: { id } });
+    const comprador = this.compradorModel
+      .findByIdAndUpdate(id, { $set: changes }, { new: true })
+      .exec();
     if (!comprador) {
-      throw new NotFoundException(`El comprador con id: ${id} no se encuentra`);
+      throw new NotFoundException('Comprador no encontrado');
     }
-    Object.assign(comprador, payload);
-    return await this.compradorRepo.save(comprador);
+    return comprador;
   }
 
-  async removeComprador(id: number): Promise<void> {
-    const comprador = await this.compradorRepo.findOne({ where: { id } });
+  async removeComprador(id: string): Promise<void> {
+    const comprador = this.compradorModel.findById(id).exec();
     if (!comprador) {
-      throw new NotFoundException(`El comprador con id: ${id} no se encuentra`);
+      throw new NotFoundException('Comprador no encontrado');
     }
-    await this.compradorRepo.remove(comprador);
+    await this.compradorModel.findByIdAndDelete(id);
   }
 }

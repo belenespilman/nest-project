@@ -7,15 +7,25 @@ import { OperadoresService } from './services/operadores.service';
 import { PedidosService } from './services/pedidos.service';
 import { ProductosService } from '/productos/services/productos.service';
 import { ProductosModule } from '/productos/productos.module';
-import { Comprador } from './entities/comprador.entity';
+import { Comprador, CompradorSchema } from './entities/comprador.entity';
 import { Pedido } from './entities/pedido.entity';
 import { Operador } from './entities/operador.entity';
 import { DetallePedido } from './entities/detallePedido.entity';
 import { DetallePedidoService } from './services/detalle-pedido.service';
 import { DetallePedidoController } from './controllers/detalle-pedido.controller';
+import { Mongoose } from 'mongoose';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
-  imports: [ProductosModule],
+  imports: [
+    MongooseModule.forFeature([
+      {
+        name: Comprador.name,
+        schema: CompradorSchema,
+      },
+    ]),
+    ProductosModule,
+  ],
   controllers: [
     CompradoresController,
     PedidosController,
