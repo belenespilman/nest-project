@@ -10,7 +10,9 @@ import {
   IsArray,
   ValidateIf,
   IsOptional,
+  ValidateNested,
 } from 'class-validator';
+import { CreateCategoryDTO } from './categorias.dto';
 
 export class CreateProductDto {
   @IsNumber()
@@ -48,15 +50,10 @@ export class CreateProductDto {
   @IsNotEmpty()
   readonly imagen: string;
 
-  // @ApiProperty()
-  // @IsNotEmpty()
-  // @IsPositive()
-  // readonly fabricanteId: number;
-
-  // @ApiProperty()
-  // @IsNotEmpty()
-  // @IsArray()
-  // categoriasId: number[];
+  @ApiProperty()
+  @IsNotEmpty()
+  @ValidateNested()
+  readonly categoria: CreateCategoryDTO;
 }
 
 export class UpdateProductDto extends PartialType(
