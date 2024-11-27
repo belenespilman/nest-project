@@ -1,4 +1,6 @@
 import { Prop, raw, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Fabricante } from './fabricante.entity';
+import { Types } from 'mongoose';
 
 @Schema()
 export class Producto {
@@ -27,6 +29,9 @@ export class Producto {
     }),
   )
   categoria: Record<string, any>;
+
+  @Prop({ type: Types.ObjectId, ref: Fabricante.name })
+  fabricante: Fabricante | Types.ObjectId;
 }
 
 export const ProductoSchema = SchemaFactory.createForClass(Producto);

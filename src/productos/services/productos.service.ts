@@ -26,7 +26,7 @@ export class ProductosService {
       }
       return this.productModel.find(filters).skip(offset).limit(limit).exec();
     }
-    return this.productModel.find().exec();
+    return this.productModel.find().populate('fabricante').exec();
   }
 
   async findOne(id: string): Promise<Producto> {

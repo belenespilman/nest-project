@@ -6,11 +6,12 @@ import {
   IsUrl,
   Min,
   IsNotEmpty,
-  IsDate,
-  IsArray,
   ValidateIf,
   IsOptional,
   ValidateNested,
+  isNotEmpty,
+  isMongoId,
+  IsMongoId,
 } from 'class-validator';
 import { CreateCategoryDTO } from './categorias.dto';
 
@@ -54,6 +55,11 @@ export class CreateProductDto {
   @IsNotEmpty()
   @ValidateNested()
   readonly categoria: CreateCategoryDTO;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsMongoId()
+  readonly fabricante: string;
 }
 
 export class UpdateProductDto extends PartialType(
