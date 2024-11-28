@@ -11,6 +11,9 @@ import { ProductosModule } from './productos/productos.module';
 import { DatabaseModule } from './database/database.module';
 
 import { environments } from './environments';
+
+import { AuthModule } from './auth/auth.module';
+
 import config from './config';
 
 import * as Joi from 'joi';
@@ -46,6 +49,8 @@ import * as Joi from 'joi';
         DATABASE_PORT: Joi.number().required(),
       }),
     }),
+
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [

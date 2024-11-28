@@ -8,9 +8,6 @@ import {
 } from 'class-validator';
 
 export class CreateOperadorDTO {
-  @ApiProperty({ description: 'ID del operador' })
-  readonly id: number;
-
   @ApiProperty({ description: 'Email del operador' })
   @IsEmail()
   @IsNotEmpty()
@@ -25,13 +22,6 @@ export class CreateOperadorDTO {
   @IsString()
   @IsNotEmpty()
   readonly role: string;
-
-  @IsOptional()
-  @IsNotEmpty()
-  @ApiProperty()
-  readonly compradorId: number;
 }
 
-export class UpdateOperadorDTO extends PartialType(
-  OmitType(CreateOperadorDTO, ['id']),
-) {}
+export class UpdateOperadorDTO extends PartialType(CreateOperadorDTO) {}

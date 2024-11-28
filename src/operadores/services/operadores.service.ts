@@ -1,19 +1,18 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Operador } from '../entities/operador.entity';
 import { CreateOperadorDTO, UpdateOperadorDTO } from '../dtos/operadores.dto';
-import { ProductosService } from 'productos/services/productos.service';
-import { Pedido } from '../entities/pedido.entity';
-import { CompradoresService } from './compradores.service';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class OperadoresService {
   constructor(
     @InjectModel(Operador.name) private operadorModel: Model<Operador>,
-    private productosService: ProductosService,
-    private compradoresService: CompradoresService,
   ) {}
 
   async findAll(): Promise<Operador[]> {
@@ -32,9 +31,26 @@ export class OperadoresService {
     return operador;
   }
 
-  async createOperador(payload: CreateOperadorDTO): Promise<Operador> {
-    const newOperador = new this.operadorModel(payload);
-    return newOperador.save();
+  async createOperador(
+    createOperadorDTO: CreateOperadorDTO,
+  ): Promise<Omit<Operador, 'password'>> {
+    const { email, password, role } = createOperadorDTO;
+    const existingOperator = this.operadorModel.findOne({ email }).exec();
+    if (existingOperator) {
+      throw new BadRequestException('El operador ya existe');
+    }
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newOperador = new this.operadorModel({
+      email,
+      password: hashedPassword,
+      role,
+    });
+    await newOperador.save();
+
+    const operadorSinPassword = newOperador.toObject();
+    delete operadorSinPassword.password;
+    return operadorSinPassword;
   }
 
   async updateOperador(
