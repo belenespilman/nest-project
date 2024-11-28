@@ -52,14 +52,16 @@ export class ProductosService {
     return product;
   }
 
-  async deleteProducto(id: string): Promise<void> {
-    const producto = await this.productModel.findById(id);
+  async deleteProducto(id: string): Promise<Object> {
+    const producto = await this.productModel.findByIdAndDelete(id).exec();
 
     if (!producto) {
       throw new NotFoundException(`El producto con id: ${id} no se encuentra`);
     }
-
-    await this.productModel.findByIdAndDelete(id);
+    return {
+      success: true,
+      message: 'Producto eliminado correctamente',
+    };
   }
 
   // async addCategoryToProduct(productoId: number, categoriaId: number) {

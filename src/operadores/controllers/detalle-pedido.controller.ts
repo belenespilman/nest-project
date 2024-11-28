@@ -16,6 +16,7 @@ import {
   CreateDetallePedidoDTO,
   UpdateDetallePedidoDTO,
 } from 'operadores/dtos/detallePedido.dto';
+import { MongoldPipe } from 'common/mongold.pipe';
 
 @ApiTags('Detalle Pedido')
 @Controller('detalle-pedido')
@@ -32,8 +33,8 @@ export class DetallePedidoController {
   @Get(':/idDetallePedido')
   @ApiOperation({ summary: 'Obtener un detalle de pedido por id' })
   @HttpCode(HttpStatus.ACCEPTED)
-  findById(@Param('idDetallePedido', ParseIntPipe) idDetallePedido: number) {
-    return this.detalleService.findOne(+idDetallePedido);
+  findById(@Param('idDetallePedido', MongoldPipe) idDetallePedido: string) {
+    return this.detalleService.findOne(idDetallePedido);
   }
 
   @Post()
@@ -45,17 +46,17 @@ export class DetallePedidoController {
   @Put(':/idDetallePedido')
   @ApiOperation({ summary: 'Actualizar/Modificar un detalle de pedido' })
   updateDetalle(
-    @Param('idDetallePedido', ParseIntPipe) idDetallePedido: number,
+    @Param('idDetallePedido', MongoldPipe) idDetallePedido: string,
     @Body() data: UpdateDetallePedidoDTO,
   ) {
-    return this.detalleService.update(+idDetallePedido, data);
+    return this.detalleService.update(idDetallePedido, data);
   }
 
-  @Delete()
+  @Delete(':/idDetallePedido')
   @ApiOperation({ summary: 'Eliminar un detalle de pedido' })
   deleteDetallePedido(
-    @Param('idDetallePedido', ParseIntPipe) idDetallePedido: number,
+    @Param('idDetallePedido', MongoldPipe) idDetallePedido: string,
   ) {
-    return this.detalleService.delete(+idDetallePedido);
+    return this.detalleService.delete(idDetallePedido);
   }
 }

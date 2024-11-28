@@ -11,9 +11,8 @@ import {
   Delete,
 } from '@nestjs/common';
 import { OperadoresService } from '../services/operadores.service';
-import { ParseIntPipe } from '/common/parse-int.pipe';
-import { Operador } from '../entities/operador.entity';
 import { CreateOperadorDTO, UpdateOperadorDTO } from '../dtos/operadores.dto';
+import { MongoldPipe } from 'common/mongold.pipe';
 
 @ApiTags('Operadores')
 @Controller('operadores')
@@ -30,8 +29,8 @@ export class OperadoresController {
   @Get('/:idOperator')
   @ApiOperation({ summary: 'Obtener operador por ID' })
   @HttpCode(HttpStatus.ACCEPTED)
-  getOperatorById(@Param('idOperator', ParseIntPipe) idOperator: number): any {
-    return this.operadoresService.findOne(+idOperator);
+  getOperatorById(@Param('idOperator', MongoldPipe) idOperator: string): any {
+    return this.operadoresService.findOne(idOperator);
   }
 
   // @Get(':id/pedidos')
@@ -45,24 +44,24 @@ export class OperadoresController {
   //   return this.operadoresService.getTasks();
   // }
 
-  // @Post()
-  // @ApiOperation({ summary: 'Crear operador' })
-  // createOperador(@Body() payload: CreateOperadorDTO): any {
-  //   return this.operadoresService.createOperador(payload);
-  // }
+  @Post()
+  @ApiOperation({ summary: 'Crear operador' })
+  createOperador(@Body() payload: CreateOperadorDTO): any {
+    return this.operadoresService.createOperador(payload);
+  }
 
   @Put('/:idOperator')
   @ApiOperation({ summary: 'Actualizar operador' })
   updateOperator(
-    @Param('idOperador', ParseIntPipe) idOperador: number,
+    @Param('idOperador', MongoldPipe) idOperador: string,
     @Body() body: UpdateOperadorDTO,
   ): any {
-    return this.operadoresService.updateOperador(+idOperador, body);
+    return this.operadoresService.updateOperador(idOperador, body);
   }
 
   @Delete('/:idOperator')
   @ApiOperation({ summary: 'Delete operator by ID' })
-  deleteOperator(@Param('idOperator', ParseIntPipe) idOperator: number): any {
-    return this.operadoresService.deleteOperador(+idOperator);
+  deleteOperator(@Param('idOperator', MongoldPipe) idOperator: string): any {
+    return this.operadoresService.deleteOperador(idOperator);
   }
 }

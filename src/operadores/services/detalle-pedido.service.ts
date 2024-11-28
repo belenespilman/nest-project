@@ -1,88 +1,69 @@
-import { Injectable } from '@nestjs/common';
-import { Pedido } from '../entities/pedido.entity';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { DetallePedido } from '../entities/detallePedido.entity';
-import { Producto } from 'productos/entities/producto.entity';
 import {
   CreateDetallePedidoDTO,
   UpdateDetallePedidoDTO,
 } from '../dtos/detallePedido.dto';
-import { UpdatePedidoDTO } from '../dtos/pedidos.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class DetallePedidoService {
-  private readonly detalleRepo: any = [
-    { id: 1, name: 'Producto 1', price: 100 },
-    { id: 2, name: 'Producto 2', price: 200 },
-  ];
-
-  private readonly pedidoRepo: any = [
-    { id: 1, name: 'Producto 1', price: 100 },
-    { id: 2, name: 'Producto 2', price: 200 },
-  ];
-
-  private readonly productoRepo: any = [
-    { id: 1, name: 'Producto 1', price: 100 },
-    { id: 2, name: 'Producto 2', price: 200 },
-  ];
-  constructor() {}
+  constructor(
+    @InjectModel(DetallePedido.name)
+    private DetallePedidoModel: Model<DetallePedido>,
+  ) {}
 
   async findAll() {
-    return await this.detalleRepo.find({
-      relations: ['pedido', 'producto'],
-    });
+    const detallePedidos = await this.DetallePedidoModel.find().exec();
+    if (!detallePedidos) {
+      throw new NotFoundException('No hay detalles de pedidos disponibles');
+    }
+    return detallePedidos;
   }
 
-  async findOne(id: number) {
-    return await this.detalleRepo.findOne({
-      where: { id },
-      relations: ['pedido', 'producto'],
-    });
+  async findOne(id: string) {
+    const detallePedido = await this.DetallePedidoModel.findById(id).exec();
+    if (!detallePedido) {
+      throw new NotFoundException(
+        `Detalle del pedido con id #${id} no encontrado`,
+      );
+    }
+    return detallePedido;
   }
 
   async create(data: CreateDetallePedidoDTO) {
-    const pedido = await this.pedidoRepo.findOne({
-      where: { id: data.pedidoId },
-    });
-    const producto = await this.productoRepo.findOne({
-      where: { id: data.productoId },
-    });
-
-    const detalle = new DetallePedido();
-    // detalle.pedido = pedido;
-    // detalle.producto = producto;
-    detalle.cantidad = data.cantidad;
-    return this.detalleRepo.save(detalle);
+    const newDetallePedido = new this.DetallePedidoModel(data);
+    return newDetallePedido.save();
   }
 
   async update(
-    id: number,
-    data: UpdateDetallePedidoDTO,
+    id: string,
+    changes: UpdateDetallePedidoDTO,
   ): Promise<DetallePedido> {
-    const detalle = await this.detalleRepo.findOne({ where: { id } });
-    if (!detalle) {
-      throw new Error('Detalle de Pedido no encontrado');
+    const detallePedido = await this.DetallePedidoModel.findByIdAndUpdate(
+      id,
+      { $set: changes },
+      { new: true },
+    ).exec();
+    if (!detallePedido) {
+      throw new NotFoundException(
+        `Detalle del pedido con id #${id} no encontrado`,
+      );
     }
-    detalle.cantidad = data.cantidad;
-    if (data.pedidoId) {
-      const pedido = await this.pedidoRepo.findOne({
-        where: { id: data.pedidoId },
-      });
-      if (pedido) detalle.pedido = pedido;
-    }
-    if (data.productoId) {
-      const producto = await this.productoRepo.findOne({
-        where: { id: data.productoId },
-      });
-      if (producto) detalle.producto = producto;
-    }
-    return await this.detalleRepo.save(detalle);
+    return detallePedido.save();
   }
 
-  async delete(id: number) {
-    const detalle = await this.detalleRepo.findOne({ where: { id } });
+  async delete(id: string) {
+    const detalle = await this.DetallePedidoModel.findByIdAndDelete(id);
     if (!detalle) {
-      throw new Error('Detalle de Pedido no encontrado');
+      throw new NotFoundException(
+        `Detalle del pedido con id #${id} no encontrado`,
+      );
     }
-    await this.detalleRepo.remove(detalle);
+    return {
+      success: true,
+      message: 'El detalle ha sido eliminado',
+    };
   }
 }

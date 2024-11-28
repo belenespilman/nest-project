@@ -8,7 +8,7 @@ export class Producto {
   @Prop({ required: true, unique: true })
   nombre: string;
 
-  @Prop()
+  @Prop({ type: String })
   descripcion: string;
 
   @Prop({ type: Number, index: true })
@@ -17,10 +17,10 @@ export class Producto {
   @Prop({ type: Number })
   stock: number;
 
-  @Prop()
+  @Prop({ type: String })
   origen: string;
 
-  @Prop()
+  @Prop({ type: String })
   imagen: string;
 
   @Prop(

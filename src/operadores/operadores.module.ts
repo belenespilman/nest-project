@@ -9,8 +9,11 @@ import { ProductosService } from '/productos/services/productos.service';
 import { ProductosModule } from '/productos/productos.module';
 import { Comprador, CompradorSchema } from './entities/comprador.entity';
 import { Pedido, PedidosSchema } from './entities/pedido.entity';
-import { Operador } from './entities/operador.entity';
-import { DetallePedido } from './entities/detallePedido.entity';
+import { Operador, OperadorSchema } from './entities/operador.entity';
+import {
+  DetallePedido,
+  DetallePedidoSchema,
+} from './entities/detallePedido.entity';
 import { DetallePedidoService } from './services/detalle-pedido.service';
 import { DetallePedidoController } from './controllers/detalle-pedido.controller';
 import { Mongoose } from 'mongoose';
@@ -26,6 +29,14 @@ import { MongooseModule } from '@nestjs/mongoose';
       {
         name: Pedido.name,
         schema: PedidosSchema,
+      },
+      {
+        name: Operador.name,
+        schema: OperadorSchema,
+      },
+      {
+        name: DetallePedido.name,
+        schema: DetallePedidoSchema,
       },
     ]),
     ProductosModule,

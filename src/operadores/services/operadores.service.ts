@@ -5,68 +5,62 @@ import { CreateOperadorDTO, UpdateOperadorDTO } from '../dtos/operadores.dto';
 import { ProductosService } from 'productos/services/productos.service';
 import { Pedido } from '../entities/pedido.entity';
 import { CompradoresService } from './compradores.service';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class OperadoresService {
-  private readonly operadorRepo: any = [
-    { id: 1, name: 'Producto 1', price: 100 },
-    { id: 2, name: 'Producto 2', price: 200 },
-  ];
   constructor(
+    @InjectModel(Operador.name) private operadorModel: Model<Operador>,
     private productosService: ProductosService,
     private compradoresService: CompradoresService,
   ) {}
 
   async findAll(): Promise<Operador[]> {
-    const operadores = await this.operadorRepo.find({
-      relations: ['comprador'],
-    });
-    if (!operadores.length) {
+    const operadores = await this.operadorModel.find().exec();
+    if (!operadores) {
       throw new NotFoundException('No hay operadores disponibles');
     }
     return operadores;
   }
 
-  async findOne(id: number): Promise<Operador> {
-    const operador = await this.operadorRepo.findOne({
-      where: { id },
-      relations: ['comprador'],
-    });
+  async findOne(id: string): Promise<Operador> {
+    const operador = await this.operadorModel.findById(id).exec();
     if (!operador) {
       throw new NotFoundException(`El operador con id: ${id} no existe`);
     }
     return operador;
   }
 
-  // async createOperador(payload: CreateOperadorDTO): Promise<Operador> {
-  //   const newOperador = this.operadorRepo.create(payload);
-  //   if (payload.compradorId) {
-  //     const comprador = await this.compradoresService.findOne(
-  //       payload.compradorId,
-  //     );
-  //     newOperador.comprador = comprador;
-  //   }
-  //   return this.operadorRepo.save(newOperador);
-  // }
-
-  async updateOperador(
-    id: number,
-    payload: UpdateOperadorDTO,
-  ): Promise<Operador> {
-    const operador = await this.operadorRepo.findOne({ where: { id } });
-    if (!operador) {
-      throw new NotFoundException(`El operador con id: ${id} no se encuentra`);
-    }
-    Object.assign(operador, payload);
-    return await this.operadorRepo.save(operador);
+  async createOperador(payload: CreateOperadorDTO): Promise<Operador> {
+    const newOperador = new this.operadorModel(payload);
+    return newOperador.save();
   }
 
-  async deleteOperador(id: number): Promise<void> {
-    const operador = await this.operadorRepo.findOne({ where: { id } });
+  async updateOperador(
+    id: string,
+    changes: UpdateOperadorDTO,
+  ): Promise<Operador> {
+    const operador = await this.operadorModel.findByIdAndUpdate(
+      id,
+      { $set: changes },
+      { new: true },
+    );
     if (!operador) {
       throw new NotFoundException(`El operador con id: ${id} no se encuentra`);
     }
-    await this.operadorRepo.remove(operador);
+    return operador.save();
+  }
+
+  async deleteOperador(id: string): Promise<Object> {
+    const operador = await this.operadorModel.findByIdAndDelete(id);
+    if (!operador) {
+      throw new NotFoundException(`El operador con id: ${id} no se encuentra`);
+    }
+    return {
+      success: true,
+      message: 'El operador fue eliminado correctamente',
+    };
   }
 
   // async getOrderByUser(id: number): Promise<Pedido> {
