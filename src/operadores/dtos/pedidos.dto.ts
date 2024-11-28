@@ -13,6 +13,13 @@ export class CreatePedidoDTO {
   readonly productos: string[];
 }
 
+export class AddProductsToPedidoDTO {
+  @ApiProperty()
+  @IsArray()
+  @IsNotEmpty()
+  readonly productsIds: string[];
+}
+
 export class UpdatePedidoDTO extends PartialType(
   OmitType(CreatePedidoDTO, ['productos']),
 ) {}

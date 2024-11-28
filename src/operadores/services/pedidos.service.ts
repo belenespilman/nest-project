@@ -2,7 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { Pedido } from '../entities/pedido.entity';
 import { CreatePedidoDTO, UpdatePedidoDTO } from '../dtos/pedidos.dto';
-import { Comprador } from 'operadores/entities/comprador.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
@@ -54,5 +53,17 @@ export class PedidosService {
       throw new NotFoundException('Pedido con id no encontrado');
     }
     return this.pedidoModel.findByIdAndDelete();
+  }
+
+  async removeProduct(id: string, productId: string) {
+    const pedido = await this.pedidoModel.findById(id);
+    pedido.productos.pull(productId);
+    return pedido.save();
+  }
+
+  async AddProducts(id: string, productsIds: string[]) {
+    const pedido = await this.pedidoModel.findById(id);
+    productsIds.forEach((pId) => pedido.productos.push(pId));
+    return pedido.save();
   }
 }

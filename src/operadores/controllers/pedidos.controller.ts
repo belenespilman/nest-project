@@ -12,7 +12,11 @@ import {
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { PedidosService } from '../services/pedidos.service';
 import { ParseIntPipe } from 'common/parse-int.pipe';
-import { CreatePedidoDTO, UpdatePedidoDTO } from 'operadores/dtos/pedidos.dto';
+import {
+  AddProductsToPedidoDTO,
+  CreatePedidoDTO,
+  UpdatePedidoDTO,
+} from 'operadores/dtos/pedidos.dto';
 import { MongoldPipe } from 'common/mongold.pipe';
 
 @ApiTags('Pedidos')
@@ -47,6 +51,24 @@ export class PedidosController {
     @Body() payload: UpdatePedidoDTO,
   ) {
     return this.pedidoService.updatePedido(PedidoId, payload);
+  }
+
+  @Put(':id/productos')
+  @ApiOperation({ summary: 'Agregar productos a un pedido' })
+  addProducts(
+    @Param('id') id: string,
+    @Body() payload: AddProductsToPedidoDTO,
+  ) {
+    return this.pedidoService.AddProducts(id, payload.productsIds);
+  }
+
+  @Delete(':id/producto/:productId')
+  @ApiOperation({ summary: 'Borrar un producto de un pedido' })
+  removeProduct(
+    @Param('id') id: string,
+    @Param('productId') productId: string,
+  ) {
+    return this.pedidoService.removeProduct(id, productId);
   }
 
   @Delete(':/PedidoId')
