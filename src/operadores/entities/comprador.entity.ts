@@ -1,5 +1,6 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
+import { Direcciones, SubDirecciones } from './direccones.entity';
 
 @Schema()
 export class Comprador {
@@ -13,15 +14,9 @@ export class Comprador {
   telefono: number;
 
   @Prop({
-    type: [
-      {
-        calle: { type: String },
-        numero: { type: String },
-        ciudad: { type: String },
-      },
-    ],
+    type: [SubDirecciones],
   })
-  direcciones: Types.Array<Record<string, any>>;
+  direcciones: Types.Array<Direcciones>;
 }
 
 export const CompradorSchema = SchemaFactory.createForClass(Comprador);

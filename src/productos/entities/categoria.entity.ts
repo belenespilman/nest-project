@@ -1,7 +1,12 @@
-import { Producto } from './producto.entity';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
+@Schema()
 export class Categoria {
-  id: number;
-
+  @Prop()
   nombre: string;
+
+  @Prop()
+  imagen: string;
 }
+
+export const SubDocCategoria = SchemaFactory.createForClass(Categoria);

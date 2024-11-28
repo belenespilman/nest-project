@@ -1,5 +1,13 @@
-import { IsNumber, IsString, IsNotEmpty, IsArray } from 'class-validator';
+import {
+  IsNumber,
+  IsString,
+  IsNotEmpty,
+  IsArray,
+  ValidateNested,
+} from 'class-validator';
 import { PartialType, OmitType, ApiProperty } from '@nestjs/swagger';
+import { CreateDireccionesDTO } from './direcciones.dto';
+import { Type } from 'class-transformer';
 
 export class CreateCompradorDTO {
   @ApiProperty({ description: 'ID del comprador' })
@@ -22,8 +30,10 @@ export class CreateCompradorDTO {
 
   @ApiProperty()
   @IsArray()
+  @ValidateNested({ each: true })
   @IsNotEmpty()
-  readonly direcciones: any;
+  @Type(() => CreateDireccionesDTO)
+  readonly direcciones: CreateDireccionesDTO[];
 }
 
 export class UpdateCompradorDTO extends PartialType(
