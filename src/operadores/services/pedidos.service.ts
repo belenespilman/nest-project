@@ -3,35 +3,30 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Pedido } from '../entities/pedido.entity';
 import { CreatePedidoDTO, UpdatePedidoDTO } from '../dtos/pedidos.dto';
 import { Comprador } from 'operadores/entities/comprador.entity';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class PedidosService {
-  private readonly pedidoRepo: any = [
-    { id: 1, name: 'Producto 1', price: 100 },
-    { id: 2, name: 'Producto 2', price: 200 },
-  ];
-
-  private readonly compradorRepo: any = [
-    { id: 1, name: 'Producto 1', price: 100 },
-    { id: 2, name: 'Producto 2', price: 200 },
-  ];
-  constructor() {}
+  constructor(@InjectModel(Pedido.name) private pedidoModel: Model<Pedido>) {}
 
   async findAll(): Promise<Pedido[]> {
-    const pedidos = await this.pedidoRepo.find({
-      relations: ['detalles', 'detalles.producto'],
-    });
-    if (!pedidos.length) {
+    const pedidos = await this.pedidoModel
+      .find()
+      .populate('comprador')
+      .populate({
+        path: 'productos',
+        model: 'Producto',
+      })
+      .exec();
+    if (!pedidos) {
       throw new NotFoundException('No hay pedidos disponibles');
     }
     return pedidos;
   }
 
-  async findOne(id: number): Promise<Pedido> {
-    const pedido = await this.pedidoRepo.findOne({
-      where: { id },
-      relations: ['detalles', 'detalles.producto'],
-    });
+  async findOne(id: string): Promise<Pedido> {
+    const pedido = await this.pedidoModel.findById(id).exec();
     if (!pedido) {
       throw new NotFoundException(`El pedido con id: ${id} no existe`);
     }
@@ -39,32 +34,25 @@ export class PedidosService {
   }
 
   async createPedido(data: CreatePedidoDTO): Promise<Pedido> {
-    const pedido = new Pedido();
-    if (data.compradorId) {
-      const customer = await this.compradorRepo.findOne({
-        where: { id: data.compradorId },
-      });
-      // pedido.comprador = customer;
-    }
-    return this.pedidoRepo.save(pedido);
+    const newPedido = new this.pedidoModel(data);
+    return await newPedido.save();
   }
 
-  async updatePedido(id: number, changes: UpdatePedidoDTO): Promise<Pedido> {
-    const pedido = await this.pedidoRepo.findOne({ where: { id } });
-    if (changes.compradorId) {
-      const customer = await this.compradorRepo.findOne({
-        where: { id: changes.compradorId },
-      });
-      pedido.comprador = customer;
-    }
-    return this.pedidoRepo.save(pedido);
-  }
-
-  async deletePedido(id: number): Promise<void> {
-    const pedido = await this.pedidoRepo.findOne({ where: { id } });
+  async updatePedido(id: string, changes: UpdatePedidoDTO): Promise<Pedido> {
+    const pedido = await this.pedidoModel
+      .findByIdAndUpdate(id, { $set: changes }, { new: true })
+      .exec();
     if (!pedido) {
-      throw new NotFoundException(`El pedido con id: ${id} no se encuentra`);
+      throw new NotFoundException(`Pedido con #id ${id} no encontrado`);
     }
-    await this.pedidoRepo.remove(pedido);
+    return pedido;
+  }
+
+  async deletePedido(id: string): Promise<void> {
+    const pedido = await this.pedidoModel.findById(id).exec();
+    if (!pedido) {
+      throw new NotFoundException('Pedido con id no encontrado');
+    }
+    return this.pedidoModel.findByIdAndDelete();
   }
 }

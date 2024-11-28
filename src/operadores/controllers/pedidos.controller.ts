@@ -13,6 +13,7 @@ import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { PedidosService } from '../services/pedidos.service';
 import { ParseIntPipe } from 'common/parse-int.pipe';
 import { CreatePedidoDTO, UpdatePedidoDTO } from 'operadores/dtos/pedidos.dto';
+import { MongoldPipe } from 'common/mongold.pipe';
 
 @ApiTags('Pedidos')
 @Controller('pedidos')
@@ -29,7 +30,7 @@ export class PedidosController {
   @Get('/:PedidoId')
   @ApiOperation({ summary: 'Obtener pedido por ID' })
   @HttpCode(HttpStatus.ACCEPTED)
-  getPedidoById(@Param('PedidoId', ParseIntPipe) PedidoId: number) {
+  getPedidoById(@Param('PedidoId', MongoldPipe) PedidoId: string) {
     return this.pedidoService.findOne(PedidoId);
   }
 
@@ -42,7 +43,7 @@ export class PedidosController {
   @Put(':/PedidoId')
   @ApiOperation({ summary: 'Modificar/Actualizar un pedido' })
   updatePedido(
-    @Param('PedidoId', ParseIntPipe) PedidoId: number,
+    @Param('PedidoId', MongoldPipe) PedidoId: string,
     @Body() payload: UpdatePedidoDTO,
   ) {
     return this.pedidoService.updatePedido(PedidoId, payload);
@@ -50,7 +51,7 @@ export class PedidosController {
 
   @Delete(':/PedidoId')
   @ApiOperation({ summary: 'Eliminar un pedido' })
-  deletePedido(@Param('PedidoId', ParseIntPipe) PedidoId: number) {
+  deletePedido(@Param('PedidoId', MongoldPipe) PedidoId: string) {
     return this.pedidoService.deletePedido(PedidoId);
   }
 }

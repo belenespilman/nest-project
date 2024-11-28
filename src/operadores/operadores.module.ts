@@ -8,7 +8,7 @@ import { PedidosService } from './services/pedidos.service';
 import { ProductosService } from '/productos/services/productos.service';
 import { ProductosModule } from '/productos/productos.module';
 import { Comprador, CompradorSchema } from './entities/comprador.entity';
-import { Pedido } from './entities/pedido.entity';
+import { Pedido, PedidosSchema } from './entities/pedido.entity';
 import { Operador } from './entities/operador.entity';
 import { DetallePedido } from './entities/detallePedido.entity';
 import { DetallePedidoService } from './services/detalle-pedido.service';
@@ -22,6 +22,10 @@ import { MongooseModule } from '@nestjs/mongoose';
       {
         name: Comprador.name,
         schema: CompradorSchema,
+      },
+      {
+        name: Pedido.name,
+        schema: PedidosSchema,
       },
     ]),
     ProductosModule,

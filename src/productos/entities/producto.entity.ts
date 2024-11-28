@@ -2,7 +2,6 @@ import { Prop, raw, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Fabricante } from './fabricante.entity';
 import { Types } from 'mongoose';
 import { Categoria, SubDocCategoria } from './categoria.entity';
-import { CreateCategoryDTO } from 'productos/dtos/categorias.dto';
 
 @Schema()
 export class Producto {
