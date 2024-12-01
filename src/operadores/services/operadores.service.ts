@@ -35,7 +35,7 @@ export class OperadoresService {
     createOperadorDTO: CreateOperadorDTO,
   ): Promise<Omit<Operador, 'password'>> {
     const { email, password, role } = createOperadorDTO;
-    const existingOperator = this.operadorModel.findOne({ email }).exec();
+    const existingOperator = await this.operadorModel.findOne({ email }).exec();
     if (existingOperator) {
       throw new BadRequestException('El operador ya existe');
     }

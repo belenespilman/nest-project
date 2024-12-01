@@ -53,5 +53,7 @@ import { MongooseModule } from '@nestjs/mongoose';
     OperadoresService,
     DetallePedidoService,
   ],
+
+  exports: [OperadoresService],
 })
 export class OperadoresModule {}
