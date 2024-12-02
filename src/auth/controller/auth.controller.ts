@@ -9,11 +9,8 @@ export class AuthController {
   @Post('login')
   async login(@Req() req: Request) {
     try {
-      console.log('Petición a /auth/login', req.user);
-      console.log('reqbody', req.body);
       return req.user;
     } catch (err) {
-      console.error('Error en el login:', error);
       throw err;
     }
   }
