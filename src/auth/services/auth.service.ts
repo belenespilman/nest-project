@@ -19,7 +19,7 @@ export class AuthService {
     if (!!isMatch) {
       console.log('Contraseña correcta, retornando usuario');
       const { password, ...rta } = operador.toObject();
-      return rta;
+      return operador;
     }
     console.log('Contraseña incorrecta');
     return null;

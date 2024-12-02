@@ -3,7 +3,9 @@ import { AppService } from './app.service';
 import { ConfigType } from '@nestjs/config';
 import config from './config';
 import { ApiKeyGuard } from 'auth/guards/api-key.guard';
+import { Public } from 'auth/decorators/public-decorator.decorator';
 
+@Public()
 @Controller()
 export class AppController {
   constructor(

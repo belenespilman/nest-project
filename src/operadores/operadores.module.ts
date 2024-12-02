@@ -18,6 +18,8 @@ import { DetallePedidoService } from './services/detalle-pedido.service';
 import { DetallePedidoController } from './controllers/detalle-pedido.controller';
 import { Mongoose } from 'mongoose';
 import { MongooseModule } from '@nestjs/mongoose';
+import { Passport } from 'passport';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
   imports: [
@@ -40,6 +42,7 @@ import { MongooseModule } from '@nestjs/mongoose';
       },
     ]),
     ProductosModule,
+    PassportModule,
   ],
   controllers: [
     CompradoresController,
