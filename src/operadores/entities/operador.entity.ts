@@ -3,6 +3,9 @@ import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 
 @Schema()
 export class Operador {
+  @Prop()
+  id: number;
+
   @Prop({ type: String })
   @IsEmail()
   @IsNotEmpty()

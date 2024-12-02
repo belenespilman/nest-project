@@ -7,6 +7,7 @@ import { CategoriasService } from './services/categorias.service';
 import { FabricantesService } from './services/fabricantes.service';
 import { Producto, ProductoSchema } from './entities/producto.entity';
 import { MongooseModule } from '@nestjs/mongoose';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
   imports: [
@@ -16,6 +17,8 @@ import { MongooseModule } from '@nestjs/mongoose';
         schema: ProductoSchema,
       },
     ]),
+
+    PassportModule,
   ],
   controllers: [
     FabricantesController,
