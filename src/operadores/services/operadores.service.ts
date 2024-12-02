@@ -53,6 +53,10 @@ export class OperadoresService {
     return operadorSinPassword;
   }
 
+  async findByEmail(email: string) {
+    return this.operadorModel.findOne({ email }).exec();
+  }
+
   async updateOperador(
     id: string,
     changes: UpdateOperadorDTO,

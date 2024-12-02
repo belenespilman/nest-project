@@ -3,9 +3,7 @@ import { AppService } from './app.service';
 import { ConfigType } from '@nestjs/config';
 import config from './config';
 import { ApiKeyGuard } from 'auth/guards/api-key.guard';
-import { Public } from 'auth/decorators/public-decorator.decorator';
 
-@UseGuards(ApiKeyGuard)
 @Controller()
 export class AppController {
   constructor(
@@ -13,7 +11,6 @@ export class AppController {
     @Inject(config.KEY) private configService: ConfigType<typeof config>,
   ) {}
 
-  @Public()
   @Get()
   getApiKey(): string {
     return this.appService.getHello();
@@ -29,6 +26,7 @@ export class AppController {
     return this.appService.getTasks();
   }
 
+  @UseGuards(ApiKeyGuard)
   @Get('protected')
   getProtected() {
     return {

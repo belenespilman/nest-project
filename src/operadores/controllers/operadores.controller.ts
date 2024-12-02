@@ -50,6 +50,13 @@ export class OperadoresController {
     return this.operadoresService.createOperador(payload);
   }
 
+  @Get('email/:email')
+  @ApiOperation({ summary: 'encontrar op por email' })
+  async findByEmail(@Param('email') email: string) {
+    const operador = await this.operadoresService.findByEmail(email);
+    return operador ? operador : { message: 'operador no encontrado' };
+  }
+
   @Put('/:idOperator')
   @ApiOperation({ summary: 'Actualizar operador' })
   updateOperator(
