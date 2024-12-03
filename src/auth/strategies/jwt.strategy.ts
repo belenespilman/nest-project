@@ -21,11 +21,11 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
 
   async validate(payload: PayloadToken) {
     const operador = await this.operadoresService.findOne(payload.sub);
-    console.log('JwtStrategy: Validating payload', payload);
+
     if (!operador) {
       throw new UnauthorizedException('Operador no encontrado');
     }
-    console.log('JwtStrategy: Operador encontrado', operador);
+
     return operador;
   }
 }
