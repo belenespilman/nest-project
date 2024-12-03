@@ -8,6 +8,7 @@ import { FabricantesService } from './services/fabricantes.service';
 import { Producto, ProductoSchema } from './entities/producto.entity';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { PassportModule } from '@nestjs/passport';
     ]),
 
     PassportModule,
+    JwtModule,
   ],
   controllers: [
     FabricantesController,

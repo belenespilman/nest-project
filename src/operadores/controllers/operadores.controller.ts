@@ -9,10 +9,12 @@ import {
   Post,
   Put,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { OperadoresService } from '../services/operadores.service';
 import { CreateOperadorDTO, UpdateOperadorDTO } from '../dtos/operadores.dto';
 import { MongoldPipe } from 'common/mongold.pipe';
+import { JwtAuthGuard } from 'auth/guards/jwt-auth.guard';
 
 @ApiTags('Operadores')
 @Controller('operadores')

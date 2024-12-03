@@ -16,9 +16,8 @@ import {
 } from './entities/detallePedido.entity';
 import { DetallePedidoService } from './services/detalle-pedido.service';
 import { DetallePedidoController } from './controllers/detalle-pedido.controller';
-import { Mongoose } from 'mongoose';
+
 import { MongooseModule } from '@nestjs/mongoose';
-import { Passport } from 'passport';
 import { PassportModule } from '@nestjs/passport';
 
 @Module({

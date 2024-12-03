@@ -1,14 +1,17 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { ConfigService, ConfigType } from '@nestjs/config';
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import { ConfigType } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
-import { Strategy } from 'passport-local';
 import config from 'config';
-import { ExtractJwt } from 'passport-jwt';
-import { PayloadToken } from 'auth/interfaces/token.model';
+import { ExtractJwt, Strategy } from 'passport-jwt';
+import { PayloadToken } from 'auth/models/token.model';
+import { OperadoresService } from 'operadores/services/operadores.service';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
-  constructor(@Inject(config.KEY) ConfigService: ConfigType<typeof config>) {
+  constructor(
+    private operadoresService: OperadoresService,
+    @Inject(config.KEY) ConfigService: ConfigType<typeof config>,
+  ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
@@ -16,7 +19,13 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     });
   }
 
-  validate(payload: PayloadToken) {
-    return payload;
+  async validate(payload: PayloadToken) {
+    const operador = await this.operadoresService.findOne(payload.sub);
+    console.log('JwtStrategy: Validating payload', payload);
+    if (!operador) {
+      throw new UnauthorizedException('Operador no encontrado');
+    }
+    console.log('JwtStrategy: Operador encontrado', operador);
+    return operador;
   }
 }

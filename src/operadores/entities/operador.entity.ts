@@ -1,11 +1,10 @@
 import { Schema, SchemaFactory, Prop } from '@nestjs/mongoose';
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 
-@Schema()
-export class Operador {
-  @Prop()
-  id: number;
+import { Document } from 'mongoose';
 
+@Schema()
+export class Operador extends Document {
   @Prop({ type: String })
   @IsEmail()
   @IsNotEmpty()

@@ -69,11 +69,13 @@ export class UpdateProductDto extends PartialType(
 export class FilterProductDto {
   @ApiProperty()
   @IsPositive()
-  limit: number;
+  @IsOptional()
+  limit?: number;
 
   @ApiProperty()
   @Min(0)
-  offset: number;
+  @IsOptional()
+  offset?: number;
 
   @ApiProperty()
   @IsOptional()

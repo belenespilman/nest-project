@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { OperadoresService } from 'operadores/services/operadores.service';
 import * as bcrypt from 'bcrypt';
 import { Operador } from 'operadores/entities/operador.entity';
-import { PayloadToken } from 'auth/interfaces/token.model';
+import { PayloadToken } from 'auth/models/token.model';
 
 @Injectable()
 export class AuthService {
@@ -14,9 +14,8 @@ export class AuthService {
 
   async validateUser(email: string, password: string) {
     const operador = await this.operadoresService.findByEmail(email);
-
     if (!operador) {
-      return null;
+      throw new UnauthorizedException('El operador no existe');
     }
     const isMatch = await bcrypt.compare(password, operador.password);
 
@@ -25,11 +24,15 @@ export class AuthService {
       return rta;
     }
 
-    return null;
+    throw new UnauthorizedException('Credenciales incorrectas');
   }
 
   async generateJWT(operador: Operador) {
-    const payload: PayloadToken = { role: operador.role, sub: operador.id };
+    const payload: PayloadToken = {
+      role: operador.role,
+      sub: operador._id.toString(),
+    };
+
     return {
       access_token: this.jwtService.sign(payload),
       operador,
