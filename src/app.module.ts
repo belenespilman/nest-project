@@ -4,7 +4,6 @@ import { HttpModule, HttpService } from '@nestjs/axios';
 import { lastValueFrom } from 'rxjs/internal/lastValueFrom';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { MongoClient } from 'mongodb';
 
 import { OperadoresModule } from './operadores/operadores.module';
 import { ProductosModule } from './productos/productos.module';
@@ -17,22 +16,6 @@ import { AuthModule } from './auth/auth.module';
 import config from './config';
 
 import * as Joi from 'joi';
-import { APP_GUARD } from '@nestjs/core';
-import { JwtAuthGuard } from 'auth/guards/jwt-auth.guard';
-
-// const uri = 'mongodb://mongo:secreta123@localhost:27018/';
-
-// const client = new MongoClient(uri);
-
-// async function run() {
-//   await client.connect();
-//   const database = client.db('admin');
-//   const taskCollection = database.collection('tasks');
-//   const tasks = await taskCollection.find().toArray();
-//   console.log(tasks);
-// }
-
-// run();
 
 @Global()
 @Module({

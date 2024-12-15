@@ -1,17 +1,53 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { HttpModule, HttpService } from '@nestjs/axios';
+import { lastValueFrom } from 'rxjs';
 
 describe('AppController', () => {
   let appController: AppController;
+  let appService: AppService;
 
   beforeEach(async () => {
+    const mockConfigService = {
+      apiKey: 'mi-api-key',
+      database: {
+        name: 'mi-base-de-datos',
+        port: 5432,
+      },
+    };
+    const mockMongo = {
+      connect: jest.fn(),
+      close: jest.fn(),
+    };
+
     const app: TestingModule = await Test.createTestingModule({
       controllers: [AppController],
-      providers: [AppService],
+      imports: [HttpModule],
+      providers: [
+        AppService,
+        {
+          provide: 'TAREA_ASYNC',
+          useFactory: async (http: HttpService) => {
+            const req = http.get('https://jsonplaceholder.typicode.com/posts');
+            const tarea = await lastValueFrom(req);
+            return tarea.data;
+          },
+          inject: [HttpService],
+        },
+        {
+          provide: 'CONFIGURATION(config)',
+          useValue: mockConfigService,
+        },
+        {
+          provide: 'MONGO',
+          useValue: mockMongo,
+        },
+      ],
     }).compile();
 
     appController = app.get<AppController>(AppController);
+    appService = app.get<AppService>(AppService);
   });
 
   describe('getHello', () => {

@@ -38,6 +38,7 @@
     "commonjs": "^0.0.1",
     "dotenv": "^16.4.5",
     "glob": "^11.0.0",
+    "jest-mock-extended": "^4.0.0-beta1",
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^3.7.4",
@@ -95,6 +96,14 @@
       "**/*.(t|j)s"
     ],
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "moduleNameMapper": {
+      "^auth/(.*)$": "<rootDir>/auth/$1",
+      "^operadores/(.*)$": "<rootDir>/operadores/$1",
+      "^productos/(.*)$": "<rootDir>/productos/$1",
+      "^database/(.*)$": "<rootDir>/database/$1",
+      "^common/(.*)$": "<rootDir>/common/$1",
+      "^config$": "<rootDir>/config"
+    }
   }
 }

@@ -16,7 +16,7 @@ import {
   CreateProductDto,
   FilterProductDto,
   UpdateProductDto,
-} from '/productos/dtos/productos.dto';
+} from '../dtos/productos.dto';
 import { ProductosService } from 'productos/services/productos.service';
 import { MongoldPipe } from 'common/mongold.pipe';
 import { JwtAuthGuard } from 'auth/guards/jwt-auth.guard';

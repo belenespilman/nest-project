@@ -20,7 +20,12 @@
     "noFallthroughCasesInSwitch": false,
     "esModuleInterop": true,
     "paths": {
-      "*": ["node_modules/*", "src/*"]
+      "auth/*": ["src/auth/*"],
+      "operadores/*": ["src/operadores/*"],
+      "productos/*": ["src/productos/*"],
+      "database/*": ["src/database/*"],
+      "common/*": ["src/common/*"],
+      "config": ["src/config"]
     }
   },
   "include": ["src/**/*"],

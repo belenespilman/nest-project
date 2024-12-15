@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-Schema();
+@Schema()
 export class Direcciones {
   @Prop({ type: String })
   calle: string;
