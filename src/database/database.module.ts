@@ -14,6 +14,7 @@ import { MongooseModule } from '@nestjs/mongoose';
           configService.mongo;
         return {
           uri: `${connection}://${user}:${password}@${host}:${port}`,
+          useUnifiedTopology: true,
         };
       },
     }),
@@ -26,7 +27,10 @@ import { MongooseModule } from '@nestjs/mongoose';
         const { connection, user, password, host, port, dbName } =
           configService.mongo;
         const uri = `${connection}://${user}:${password}@${host}:${port}`;
-        const client = new MongoClient(uri, { useNewUrlParser: true });
+        const client = new MongoClient(uri, {
+          useNewUrlParser: true,
+          useUnifiedTopology: true,
+        });
         await client.connect();
         const database = client.db(dbName);
         return database;

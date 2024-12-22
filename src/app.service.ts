@@ -10,19 +10,10 @@ export class AppService {
     @Inject('MONGO') private database: Db,
   ) {}
 
-  getHello(): string {
-    const apiKey = this.configService.apiKey;
-    const dbName = this.configService.database.name;
-    const dbPort = this.configService.database.port;
-    return `La llave de la aplicación es ${apiKey}. La base de datos "${dbName}" corre en el puerto ${dbPort}`;
-  }
-
-  getTasks() {
-    const tasksCollection = this.database.collection('tasks');
-    return tasksCollection.find().toArray();
-  }
-
-  getUseFactory(): string {
-    return 'Realizando una tarea asincrona de ejemplo';
+  getHello(): any {
+    return {
+      message: 'API is live!',
+      docs: 'http://localhost:3000/docs',
+    };
   }
 }
