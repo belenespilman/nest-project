@@ -11,7 +11,7 @@ export class AppService {
   getHello(): any {
     return {
       message: 'API is live!',
-      docs: 'http://localhost:3000/docs',
+      docs: 'https://ecommerce-api-dev.onrender.com/docs',
     };
   }
 }
