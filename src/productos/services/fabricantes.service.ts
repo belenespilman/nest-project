@@ -5,19 +5,17 @@ import {
   CreateFabricanteDTO,
   UpdateFabricanteDTO,
 } from '../dtos/fabricantes.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model, set } from 'mongoose';
 
 @Injectable()
 export class FabricantesService {
-  private readonly fabricanteRepo: any = [
-    { id: 1, name: 'Producto 1', price: 100 },
-    { id: 2, name: 'Producto 2', price: 200 },
-  ];
-  constructor() {}
+  constructor(
+    @InjectModel(Fabricante.name) private fabricanteModel: Model<Fabricante>,
+  ) {}
 
   async findAll(): Promise<Fabricante[]> {
-    const fabricantes = await this.fabricanteRepo.find({
-      relations: ['products'],
-    });
+    const fabricantes = await this.fabricanteModel.find().exec();
     if (!fabricantes.length) {
       throw new NotFoundException('No hay fabricantes disponibles');
     }
@@ -25,10 +23,7 @@ export class FabricantesService {
   }
 
   async findOne(id: number): Promise<Fabricante> {
-    const fabricante = await this.fabricanteRepo.findOne({
-      where: { id },
-      relations: ['products'],
-    });
+    const fabricante = await this.fabricanteModel.findById(id).exec();
     if (!fabricante) {
       throw new NotFoundException(`El fabricante con id: ${id} no existe`);
     }
@@ -36,37 +31,35 @@ export class FabricantesService {
   }
 
   async createFabricante(payload: CreateFabricanteDTO): Promise<Fabricante> {
-    const newFabricante = this.fabricanteRepo.create(payload);
-    return await this.fabricanteRepo.save(newFabricante);
+    const newFabricante = new this.fabricanteModel(payload);
+    return await newFabricante.save();
   }
 
   async updateFabricante(
     id: number,
     payload: UpdateFabricanteDTO,
   ): Promise<Fabricante> {
-    const fabricante = await this.fabricanteRepo.findOne({
-      where: { id },
-      relations: ['products'],
-    });
+    const fabricante = await this.fabricanteModel
+      .findByIdAndUpdate(id, { $set: payload }, { new: true })
+      .exec();
     if (!fabricante) {
       throw new NotFoundException(
         `El fabricante con id: ${id} no se encuentra`,
       );
     }
-    Object.assign(fabricante, payload);
-    return await this.fabricanteRepo.save(fabricante);
+    return fabricante;
   }
 
-  async deleteFabricante(id: number): Promise<void> {
-    const fabricante = await this.fabricanteRepo.findOne({
-      where: { id },
-      relations: ['products'],
-    });
+  async deleteFabricante(id: number): Promise<Object> {
+    const fabricante = await this.fabricanteModel.findByIdAndDelete(id).exec();
     if (!fabricante) {
       throw new NotFoundException(
         `El fabricante con id: ${id} no se encuentra`,
       );
     }
-    await this.fabricanteRepo.remove(fabricante);
+    return {
+      success: true,
+      message: 'Fabricante eliminado correctamente',
+    };
   }
 }

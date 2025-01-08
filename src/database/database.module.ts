@@ -1,42 +1,43 @@
 import { Global, Module } from '@nestjs/common';
-import { ConfigType } from '@nestjs/config';
+import { ConfigModule, ConfigService, ConfigType } from '@nestjs/config';
 import config from '../config';
-import { MongoClient } from 'mongodb';
 import { MongooseModule } from '@nestjs/mongoose';
+import mongoose from 'mongoose';
 
 @Global()
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      load: [config],
+      isGlobal: true,
+    }),
     MongooseModule.forRootAsync({
-      inject: [config.KEY],
-      useFactory: async (configService: ConfigType<typeof config>) => {
-        const { connection, user, password, host, port, dbName } =
-          configService.mongo;
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => {
+        const uri = configService.get<string>('config.mongo.uri');
+        try {
+          console.log('Conectando a MongoDB Atlas...');
+
+          mongoose.connection.on('connected', () => {
+            console.log('Conexión exitosa a MongoDB Atlas');
+          });
+
+          mongoose.connection.on('error', (error) => {
+            console.error('Error en la conexión con MongoDB:', error);
+          });
+
+          await mongoose.connect(uri);
+        } catch (error) {
+          console.error('Error al conectar a MongoDB Atlas:', error);
+        }
         return {
-          uri: `${connection}://${user}:${password}@${host}:${port}`,
-          useUnifiedTopology: true,
+          uri: uri,
+          useNewUrlParser: true,
         };
       },
     }),
   ],
-  providers: [
-    {
-      inject: [config.KEY],
-      provide: 'MONGO',
-      useFactory: async (configService: ConfigType<typeof config>) => {
-        const { connection, user, password, host, port, dbName } =
-          configService.mongo;
-        const uri = `${connection}://${user}:${password}@${host}:${port}`;
-        const client = new MongoClient(uri, {
-          useNewUrlParser: true,
-          useUnifiedTopology: true,
-        });
-        await client.connect();
-        const database = client.db(dbName);
-        return database;
-      },
-    },
-  ],
-  exports: ['MONGO', MongooseModule],
+
+  exports: [MongooseModule],
 })
 export class DatabaseModule {}

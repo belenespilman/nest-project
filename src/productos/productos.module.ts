@@ -9,6 +9,7 @@ import { Producto, ProductoSchema } from './entities/producto.entity';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
+import { Fabricante, SubFabricante } from './entities/fabricante.entity';
 
 @Module({
   imports: [
@@ -16,6 +17,10 @@ import { JwtModule } from '@nestjs/jwt';
       {
         name: Producto.name,
         schema: ProductoSchema,
+      },
+      {
+        name: Fabricante.name,
+        schema: SubFabricante,
       },
     ]),
 

@@ -1,13 +1,11 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { ConfigType } from '@nestjs/config';
-import config from './config';
-import { Db } from 'mongodb';
+import { ConfigService, ConfigType } from '@nestjs/config';
+
 @Injectable()
 export class AppService {
   constructor(
     @Inject('TAREA_ASYNC') private readonly tarea: any,
-    @Inject(config.KEY) private configService: ConfigType<typeof config>,
-    @Inject('MONGO') private database: Db,
+    @Inject(ConfigService) private configService: ConfigService,
   ) {}
 
   getHello(): any {

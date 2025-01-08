@@ -17,6 +17,7 @@ export default registerAs('config', () => {
       port: parseInt(process.env.MONGO_PORT, 10),
       host: process.env.MONGO_HOST,
       connection: process.env.MONGO_CONNECTION,
+      uri: process.env.MONGO_URI,
     },
   };
 });

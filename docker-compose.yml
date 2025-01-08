@@ -29,22 +29,9 @@ services:
       - MONGO_ROOT_PASSWORD=secreta123
       - MONGO_DB=admin
     ports:
-      - '27018:27017'
+      - '27017:27017'
     volumes:
       - 'mongodb_data:/data/db'
-
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: app_container
-    restart: always
-    ports:
-      - '3000:3000'
-    depends_on:
-      - mongo
-    environment:
-      - MONGO_URI=mongodb://mongo:secreta123@localhost:27018/
 
 volumes:
   postgres_data:
